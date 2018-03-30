@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="restaurante_salycanelaDS" transaction-type="JTA">
+		<jta-data-source>java:/restaurante_salycanelaDS</jta-data-source>
+		<class>salycanela.model.entities.TabAdmTipoUsuario</class>
+		<class>salycanela.model.entities.TabAdmUsuario</class>
+		<class>salycanela.model.entities.TabParametro</class>
+		<class>salycanela.model.entities.TabVtsCaja</class>
+		<class>salycanela.model.entities.TabVtsCliente</class>
+		<class>salycanela.model.entities.TabVtsDetalleFactura</class>
+		<class>salycanela.model.entities.TabVtsDetallePedido</class>
+		<class>salycanela.model.entities.TabVtsFactura</class>
+		<class>salycanela.model.entities.TabVtsMenu</class>
+		<class>salycanela.model.entities.TabVtsPedido</class>
+		<class>salycanela.model.entities.TabVtsPlato</class>
+		<class>salycanela.model.entities.TabVtsTipoPlato</class>
+		<class>salycanela.model.entities.TabVtsTransaccion</class>
+	</persistence-unit>
+</persistence>

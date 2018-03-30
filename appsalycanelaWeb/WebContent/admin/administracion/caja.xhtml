@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<body>
+	<ui:composition template="../template.xhtml">
+		<ui:define name="title">
+			<title>Cajas</title>
+		</ui:define>
+		<ui:define name="content">
+			<p:growl autoUpdate="true"></p:growl>
+			<p:breadCrumb>
+				<p:menuitem value="Administrador" url="#" />
+				<p:menuitem value="Administrador" url="#" />
+				<p:menuitem value="Cajas" url="#" />
+			</p:breadCrumb>
+			<h:panelGrid columns="2">
+				<p:dialog header="Nueva Caja" widgetVar="dialogo2" id="dialogo2"
+					modal="true" height="300" hideEffect="fade">
+					<h:form id="form1">
+						<p:panelGrid columns="2">
+							<h:outputText value="Nombre Caja:" />
+							<p:inputText value="#{controllerCaja.idcaja}" required="true"
+								requiredMessage="Especifique el nombre" />
+							<h:outputText value="Actual Caja: " />
+							<p:inputNumber value="#{controllerCaja.actualcaja}" symbol=" USD"
+								symbolPosition="s" decimalSeparator="," thousandSeparator="." />
+						</p:panelGrid>
+						<p:commandButton value="Agregar" update="@form,:form2:tabla1"
+							actionListener="#{controllerCaja.AgregarCaja()}"
+							onclick="PF('modal').hide();$('#form1').trigger('reset');"></p:commandButton>
+
+					</h:form>
+				</p:dialog>
+
+				<h:form id="form2">
+					<p:panel header="LISTA DE REGISTROS">
+						<p:dataTable value="#{controllerCaja.lista}" var="p" id="tabla1">
+							<p:column headerText="Nombre de la Caja">
+								<h:outputText value="#{p.idcaja}" />
+							</p:column>
+							<p:column headerText="Valor Actual">
+								<h:outputText value="#{p.actualcaja}" />
+							</p:column>
+							<p:column headerText="EDITAR">
+								<p:commandButton icon="ui-icon-pencil" update="form4"
+									onclick="PF('dialogo1').show();"
+									actionListener="#{controllerCaja.CargarCaja(p)}"></p:commandButton>
+							</p:column>
+						</p:dataTable>
+						<f:facet name="actions">
+
+							<p:commandButton icon="ui-icon-pencil" value="Nuevo"
+								update="form1" onclick="PF('dialogo2').show();"
+								style="float:right;" />
+						</f:facet>
+					</p:panel>
+				</h:form>
+			</h:panelGrid>
+
+			<p:dialog header="Edición de la Caja" widgetVar="dialogo1"
+				id="dialogo1" modal="true" height="330" hideEffect="fade">
+				<h:form id="form4">
+
+					<p:panelGrid columns="2">
+						<h:outputText value="Nombre de la Caja:" />
+						<h:outputText value="#{controllerCaja.idcaja}" />
+						<h:outputText value="Valor actual:"
+							requiredMessage="El valor actual de la caja" />
+
+						<p:inputNumber value="#{controllerCaja.actualcaja}" symbol=" USD"
+							symbolPosition="s" decimalSeparator="," thousandSeparator="." />
+					</p:panelGrid>
+					<p:commandButton value="Actualizar" update="@form,:form2:tabla1"
+						actionListener="#{controllerCaja.EditarCaja()}"
+						onclick="PF('modal').hide();$('#form4').trigger('reset');"></p:commandButton>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

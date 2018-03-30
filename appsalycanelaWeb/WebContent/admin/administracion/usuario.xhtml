@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<body>
+	<ui:composition template="../template.xhtml">
+		<ui:define name="title">
+			<title>Control de Usuarios</title>
+		</ui:define>
+		<ui:define name="content">
+			<p:growl autoUpdate="true"></p:growl>
+			<p:breadCrumb>
+				<p:menuitem value="Administrador" url="#" />
+				<p:menuitem value="Administración" url="#" />
+				<p:menuitem value="Control de usuarios" url="#" />
+			</p:breadCrumb>
+			<h:panelGrid columns="2">
+				<p:dialog header="Nuevo Usuario" widgetVar="dialogo2" id="dialogo2"
+					modal="true" height="300" hideEffect="fade">
+					<h:form id="form1">
+						<p:panelGrid columns="2">
+							<h:outputText value="Cédula:" />
+							<p:inputText value="#{controllerUsuario.idUsuario1}"
+								required="true" requiredMessage="Especifique la ID del usuario" />
+							<h:outputText value="Tipo de usuario" />
+
+							<h:panelGroup>
+								<p:selectOneMenu value="#{controllerUsuario.idTipoUsuario1}">
+									<f:selectItem itemLabel="Seleccione..." itemValue=""
+										noSelectionOption="true" />
+									<f:selectItems value="#{controllerUsuario.listaUsuariosSI}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+
+
+							<h:outputText value="Nombre: " />
+							<p:inputText value="#{controllerUsuario.nombreUsuario1}"
+								required="true" requiredMessage="Especifique el nombre" />
+							<h:outputText value="Apellido: " />
+							<p:inputText value="#{controllerUsuario.apellidoUsuario1}"
+								required="true" requiredMessage="Especifique el apellido" />
+							<h:outputText value="Correo: " />
+							<p:inputText value="#{controllerUsuario.correoUsuario1}" type="email"
+								required="true" requiredMessage="Especifique el correo" />
+							<h:outputText value="password: " />
+							<p:inputText value="#{controllerUsuario.passwordUsuario1}"
+								required="true" requiredMessage="Especifique la password"
+								type="password" />
+						</p:panelGrid>
+						<p:commandButton value="Agregar" update="@form,:form2:tabla1"
+							actionListener="#{controllerUsuario.AgregarUsuario()}"
+							onclick="PF('modal').hide();$('#form1').trigger('reset');"></p:commandButton>
+
+					</h:form>
+				</p:dialog>
+
+				<h:form id="form2">
+					<p:panel header="LISTA DE REGISTROS">
+						<p:dataTable value="#{controllerUsuario.lista}" var="u"
+							id="tabla1">
+							<p:column headerText="Cédula">
+								<h:outputText value="#{u.idusuario}" />
+							</p:column>
+							<p:column headerText="Tipo de Usuario">
+								<h:outputText value="#{u.tabAdmTipoUsuario.nombretipousuario}" />
+							</p:column>
+							<p:column headerText="Nombre:">
+								<h:outputText value="#{u.nombreusuario}" />
+							</p:column>
+							<p:column headerText="Apellido">
+								<h:outputText value="#{u.apellidousuario}" />
+							</p:column>
+								<p:column headerText="Correo">
+								<h:outputText value="#{u.correousuario}" />
+							</p:column>
+								<p:column headerText="Password">
+								<h:outputText value="#{u.passwordusuario}" />
+							</p:column>
+								<p:column headerText="Estado">
+								<h:outputText value="#{u.estadousuario}" />
+							</p:column>
+							<p:column headerText="EDITAR">
+								<p:commandButton icon="ui-icon-pencil" update="form4"
+									onclick="PF('dialogo1').show();"
+									actionListener="#{controllerUsuario.CargarUsuario(u)}"></p:commandButton>
+							</p:column>
+						</p:dataTable>
+						<f:facet name="actions">
+
+							<p:commandButton icon="ui-icon-pencil" value="Nuevo"
+								update="form1" onclick="PF('dialogo2').show();"
+								style="float:right;" />
+						</f:facet>
+					</p:panel>
+				</h:form>
+			</h:panelGrid>
+
+			<p:dialog header="Edición de Usuarios"
+				widgetVar="dialogo1" id="dialogo1" modal="true" height="350"
+				hideEffect="fade">
+				<h:form id="form4">
+
+					<p:panelGrid columns="2">
+							<h:outputText value="Cédula:" />
+							<h:outputText value="#{controllerUsuario.idUsuario1}"/>
+							<h:outputText value="Tipo de usuario" />
+							<h:panelGroup>
+								<p:selectOneMenu value="#{controllerUsuario.idTipoUsuario1}">
+									<f:selectItem itemLabel="Seleccione..." itemValue=""
+										noSelectionOption="true" />
+									<f:selectItems value="#{controllerUsuario.listaUsuariosSI}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+							<h:outputText value="Nombre: " />
+							<p:inputText value="#{controllerUsuario.nombreUsuario1}"
+								required="true" requiredMessage="Especifique el nombre" />
+							<h:outputText value="Apellido: " />
+							<p:inputText value="#{controllerUsuario.apellidoUsuario1}"
+								required="true" requiredMessage="Especifique el apellido" />
+							<h:outputText value="Correo: " />
+							<p:inputText value="#{controllerUsuario.correoUsuario1}" type="email"
+								required="true" requiredMessage="Especifique el correo" />
+							<h:outputText value="password: " />
+							<p:inputText value="#{controllerUsuario.passwordUsuario1}"
+								required="true" requiredMessage="Especifique la password"
+								type="password" />
+							<h:outputText value="Estado: " />
+							<p:inputSwitch value="#{controllerUsuario.estadoUsuario1}" />
+						</p:panelGrid>
+					<p:commandButton value="Actualizar" update="@form,:form2:tabla1"
+						actionListener="#{controllerUsuario.EditarUsuario()}"
+						onclick="PF('modal').hide();$('#form4').trigger('reset');"></p:commandButton>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>
