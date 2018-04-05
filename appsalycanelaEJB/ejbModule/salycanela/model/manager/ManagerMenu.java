@@ -59,15 +59,13 @@ public class ManagerMenu {
 		if (bandera == true)
 			throw new Exception("Este plato ya ha sido registrado");
 		TabVtsMenu m = new TabVtsMenu();
-		int id = getContMenu() + 1;
-		m.setIdmenu(id);
 		m.setTabVtsPlato(plato);
 		m.setNombremenu(plato.getNombreplato());
 		m.setPrecio1(plato.getPrecioplato());
 		m.setPrecio2(plato.getPrecioespecialplato());
-		m.setStock(stock);
+		plato.setStock(stock);
+		em.merge(plato);
 		em.persist(m);
-		actualizarContMenu(id);
 	}
 
 	public void EliminarMenu(int idmenu) throws Exception {
@@ -80,36 +78,13 @@ public class ManagerMenu {
 		}
 	}
 
-	public void editarMenu(int idmenu, int stock) throws Exception {
-		TabVtsMenu m = em.find(TabVtsMenu.class, idmenu);
+	public void editarMenu(int idplato, int stock) throws Exception {
+		TabVtsMenu m = em.find(TabVtsMenu.class, idplato);
+		TabVtsPlato p= em.find(TabVtsPlato.class, idplato);
 		if (m == null)
 			throw new Exception("No existe el menú especificado.");
-
-		m.setStock(stock);
-		em.merge(m);
-	}
-
-	private int getContMenu() throws Exception {
-		TabParametro parametro = null;
-		try {
-			parametro = em.find(TabParametro.class, "cont_menu");
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception("Revise el parametro 'cont_menu': " + e.getMessage());
-		}
-		return parametro.getValorparametro();
-	}
-
-	private void actualizarContMenu(int nuevocontador) throws Exception {
-		TabParametro parametro = null;
-		try {
-			parametro = em.find(TabParametro.class, "cont_menu");
-			parametro.setValorparametro(nuevocontador);
-			em.merge(parametro);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception("Error al actualizar el parametro 'cont_pedido': " + e.getMessage());
-		}
+		p.setStock(stock);
+		em.merge(p);
 	}
 
 }

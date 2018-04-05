@@ -42,7 +42,11 @@ public class ControllerPedidoAlm {
 	private int mesa = 0;
 	private int idusuario;
 	private boolean entregapedido;
-	private boolean pedidonormal;
+
+	private boolean segundo;
+	private boolean llevar;
+	private boolean tarjeta;
+
 	private TabVtsPedido pedidoTmp;
 	private TabVtsTransaccion transaccionTmp;
 	private boolean transaccionTmpGuardada;
@@ -50,7 +54,6 @@ public class ControllerPedidoAlm {
 
 	private int idpedido;
 	private boolean entrega;
-	// private List<TabVtsDetallePedido> lista_detalles;
 	private BigDecimal valorpedido;
 
 	@PostConstruct
@@ -74,7 +77,9 @@ public class ControllerPedidoAlm {
 		// pedido
 		mesa = 0;
 		entregapedido = false;
-		pedidonormal = true;
+		segundo = false;
+		llevar = false;
+		tarjeta = false;
 		// estados de los guardados
 		transaccionTmpGuardada = false;
 		pedidoTmpGuardada = false;
@@ -86,11 +91,23 @@ public class ControllerPedidoAlm {
 			return "";
 		}
 		try {
-			managerPedido.agregarDetallePedidoTmp(pedidoTmp, plato.getIdplato(), 1, pedidonormal);
+			managerPedido.agregarDetallePedidoTmp(pedidoTmp, plato.getIdplato(), 1, segundo, llevar, tarjeta);
+			segundo = false;
+			llevar = false;
+			tarjeta = false;
 		} catch (Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());
 		}
 		return "";
+	}
+
+	public void eliminarDetalle(int iddp) throws Exception {
+		try {
+			managerPedido.eliminarDetallePedidoTmp(pedidoTmp, iddp);
+			JSFUtil.crearMensajeInfo("Detalle eliminado correctamente");
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+		}
 	}
 
 	public void asignarMesa() {
@@ -160,6 +177,17 @@ public class ControllerPedidoAlm {
 		return detalleTmp;
 	}
 
+	public String Segundos(TabVtsDetallePedido detalle) {
+		if (detalle.getSegundo()) 
+			return "Segundo de";
+			return "";
+	}
+	public String Llevar(TabVtsDetallePedido detalle) {
+		if (detalle.getLlevar()) 
+			return "para Llevar";
+			return "";
+	}
+
 	public List<SelectItem> getListaPlatoSI() {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
 		List<TabVtsPlato> listadoPlatos = managerPlato.findAllPlatos();
@@ -208,14 +236,6 @@ public class ControllerPedidoAlm {
 
 	public void setEntregapedido(boolean entregapedido) {
 		this.entregapedido = entregapedido;
-	}
-
-	public boolean isPedidonormal() {
-		return pedidonormal;
-	}
-
-	public void setPedidonormal(boolean pedidonormal) {
-		this.pedidonormal = pedidonormal;
 	}
 
 	public TabVtsPedido getPedidoTmp() {
@@ -282,14 +302,6 @@ public class ControllerPedidoAlm {
 		this.entrega = entrega;
 	}
 
-	/*
-	 * public List<TabVtsDetallePedido> getLista_detalles() { return lista_detalles;
-	 * }
-	 * 
-	 * public void setLista_detalles(List<TabVtsDetallePedido> lista_detalles) {
-	 * this.lista_detalles = lista_detalles; }
-	 */
-
 	public BigDecimal getValorpedido() {
 		return valorpedido;
 	}
@@ -320,6 +332,30 @@ public class ControllerPedidoAlm {
 
 	public void setListamenu(List<TabVtsMenu> listamenu) {
 		this.listamenu = listamenu;
+	}
+
+	public boolean isSegundo() {
+		return segundo;
+	}
+
+	public void setSegundo(boolean segundo) {
+		this.segundo = segundo;
+	}
+
+	public boolean isLlevar() {
+		return llevar;
+	}
+
+	public void setLlevar(boolean llevar) {
+		this.llevar = llevar;
+	}
+
+	public boolean isTarjeta() {
+		return tarjeta;
+	}
+
+	public void setTarjeta(boolean tarjeta) {
+		this.tarjeta = tarjeta;
 	}
 
 }

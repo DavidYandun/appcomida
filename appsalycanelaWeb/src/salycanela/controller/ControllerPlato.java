@@ -27,7 +27,13 @@ public class ControllerPlato {
 	private BigDecimal precioespecialplato;
 	private boolean estadoplato;
 	private int stock;
+	private boolean menu;
 	private List<TabVtsPlato> lista;
+	
+	private List<TabVtsPlato> listaalmuerzos;
+	private List<TabVtsPlato> listamenu;
+	
+	
 	@EJB
 	private ManagerPlato managerPlato;
 	@EJB
@@ -41,7 +47,7 @@ public class ControllerPlato {
 	public void AgregarPlato() {
 		try {
 			managerPlato.agregarPlato(idtipoplato, nombreplato, descripcionplato, precioplato, precioespecialplato,
-					estadoplato, stock);
+					estadoplato, stock,menu);
 			vaciarCampos();
 			JSFUtil.crearMensajeInfo("Plato registrado.");
 		} catch (Exception e) {
@@ -60,12 +66,13 @@ public class ControllerPlato {
 		precioespecialplato = plato.getPrecioespecialplato();
 		estadoplato = plato.getEstadoplato();
 		stock = plato.getStock();
+		menu=plato.getMenu();
 	}
 
 	public void EditarPlato() {
 		try {
 			managerPlato.editarPlato(idplato, idtipoplato, nombreplato, descripcionplato, precioplato,
-					precioespecialplato, estadoplato, stock);
+					precioespecialplato, estadoplato, stock,menu);
 			JSFUtil.crearMensajeInfo("Plato " + nombreplato + " editado correctamente.");
 			vaciarCampos();
 		} catch (Exception e) {
@@ -84,8 +91,45 @@ public class ControllerPlato {
 		return listadoSI;
 	}
 
+	public void AgregarMenu() {
+		try {
+			TabVtsPlato plato= managerPlato.findPlatoById(idplato);
+			managerPlato.AgregarMenu(plato, stock);
+			JSFUtil.crearMensajeInfo("Menú agregado correctamente.");
+			vaciarCampos();
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	public void EditarMenu() {
+		try {
+			TabVtsPlato plato= managerPlato.findPlatoById(idplato);
+			managerPlato.EditarMenu(plato, stock);
+			JSFUtil.crearMensajeInfo("Menú editado correctamente.");
+			vaciarCampos();
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	public void EliminarMenu(TabVtsPlato plato) {
+		try {
+			managerPlato.EliminarMenu(plato);
+			JSFUtil.crearMensajeInfo("Menú eliminado correctamente.");
+			vaciarCampos();
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
 	public void vaciarCampos() {
 		lista = managerPlato.findAllPlatos();
+		listaalmuerzos=managerPlato.findAllPlatosTipo(1);
+		listamenu=managerPlato.findAllMenu(1);
 		idplato = 0;
 		idtipoplato = 0;
 		nombreplato = null;
@@ -94,6 +138,7 @@ public class ControllerPlato {
 		precioespecialplato = null;
 		estadoplato = true;
 		stock = 1;
+		menu=false;
 	}
 
 	public int getIdplato() {
@@ -168,4 +213,27 @@ public class ControllerPlato {
 		this.stock = stock;
 	}
 
+	public boolean isMenu() {
+		return menu;
+	}
+
+	public void setMenu(boolean menu) {
+		this.menu = menu;
+	}
+
+	public List<TabVtsPlato> getListaalmuerzos() {
+		return listaalmuerzos;
+	}
+
+	public void setListaalmuerzos(List<TabVtsPlato> listaalmuerzos) {
+		this.listaalmuerzos = listaalmuerzos;
+	}
+
+	public List<TabVtsPlato> getListamenu() {
+		return listamenu;
+	}
+
+	public void setListamenu(List<TabVtsPlato> listamenu) {
+		this.listamenu = listamenu;
+	}
 }

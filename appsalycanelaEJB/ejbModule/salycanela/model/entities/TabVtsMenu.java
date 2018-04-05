@@ -16,9 +16,6 @@ import javax.persistence.*;
 public class TabVtsMenu implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(unique=true, nullable=false)
-	private Integer idmenu;
 
 	@Column(length=50)
 	private String nombremenu;
@@ -26,23 +23,13 @@ public class TabVtsMenu implements Serializable {
 	private BigDecimal precio1;
 
 	private BigDecimal precio2;
-
-	private Integer stock;
-
 	//bi-directional many-to-one association to TabVtsPlato
+	@Id
 	@ManyToOne
 	@JoinColumn(name="idplato")
 	private TabVtsPlato tabVtsPlato;
 
 	public TabVtsMenu() {
-	}
-
-	public Integer getIdmenu() {
-		return this.idmenu;
-	}
-
-	public void setIdmenu(Integer idmenu) {
-		this.idmenu = idmenu;
 	}
 
 	public String getNombremenu() {
@@ -67,14 +54,6 @@ public class TabVtsMenu implements Serializable {
 
 	public void setPrecio2(BigDecimal precio2) {
 		this.precio2 = precio2;
-	}
-
-	public Integer getStock() {
-		return this.stock;
-	}
-
-	public void setStock(Integer stock) {
-		this.stock = stock;
 	}
 
 	public TabVtsPlato getTabVtsPlato() {

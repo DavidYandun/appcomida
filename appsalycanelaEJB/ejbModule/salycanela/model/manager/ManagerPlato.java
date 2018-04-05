@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import salycanela.model.entities.TabVtsMenu;
 import salycanela.model.entities.TabVtsPlato;
 import salycanela.model.entities.TabVtsTipoPlato;
 
@@ -27,7 +28,7 @@ public class ManagerPlato {
 	}
 
 	public void agregarPlato(int idtipoplato, String nombreplato, String descripcionplato, BigDecimal precioplato,
-			BigDecimal precioespecialplato, boolean estadoplato,int stock) throws Exception {
+			BigDecimal precioespecialplato, boolean estadoplato, int stock, boolean menu) throws Exception {
 
 		Boolean bandera = false;
 		for (TabVtsPlato plato : findAllPlatos()) {
@@ -47,7 +48,7 @@ public class ManagerPlato {
 		p.setPrecioespecialplato(precioespecialplato);
 		p.setEstadoplato(estadoplato);
 		p.setStock(stock);
-
+		p.setMenu(menu);
 		em.persist(p);
 	}
 
@@ -57,7 +58,8 @@ public class ManagerPlato {
 	}
 
 	public void editarPlato(int idplato, int idtipoplato, String nombreplato, String descripcionplato,
-			BigDecimal precioplato, BigDecimal precioespecialplato, boolean estadoplato, int stock) throws Exception {
+			BigDecimal precioplato, BigDecimal precioespecialplato, boolean estadoplato, int stock, boolean menu)
+			throws Exception {
 
 		TabVtsPlato p = findPlatoById(idplato);
 		if (p == null)
@@ -78,6 +80,7 @@ public class ManagerPlato {
 		p.setPrecioespecialplato(precioespecialplato);
 		p.setEstadoplato(estadoplato);
 		p.setStock(stock);
+		p.setMenu(menu);
 		em.merge(p);
 	}
 
@@ -85,9 +88,51 @@ public class ManagerPlato {
 		Query q;
 		List<TabVtsPlato> listado;
 		String sentenciaSQL;
-		sentenciaSQL = "SELECT p FROM TabVtsPlato p ORDER BY p.nombreplato";
+		sentenciaSQL = "SELECT p FROM TabVtsPlato p ORDER BY p.tabVtsTipoPlato";
 		q = em.createQuery(sentenciaSQL);
 		listado = q.getResultList();
 		return listado;
+	}
+
+	public List<TabVtsPlato> findAllPlatosTipo(int tipoplato) {
+		Query q;
+		List<TabVtsPlato> listado;
+		String sentenciaSQL;
+		sentenciaSQL = "SELECT p FROM TabVtsPlato p WHERE p.tabVtsTipoPlato.idtipoplato=" + tipoplato + " AND p.menu=false";
+		q = em.createQuery(sentenciaSQL);
+		listado = q.getResultList();
+		return listado;
+	}
+
+	public List<TabVtsPlato> findAllMenu(int tipoplato) {
+		Query q;
+		List<TabVtsPlato> listado;
+		String sentenciaSQL = "SELECT p FROM TabVtsPlato p WHERE p.tabVtsTipoPlato.idtipoplato=" + tipoplato
+				+ " AND p.menu=true";
+		q = em.createQuery(sentenciaSQL);
+		listado = q.getResultList();
+		return listado;
+	}
+
+	public void AgregarMenu(TabVtsPlato plato, int stock) throws Exception {
+		if (plato.getMenu() == true)
+			throw new Exception("Este plato ya ha sido agregado al menú");
+		plato.setMenu(true);
+		plato.setStock(stock);
+		em.merge(plato);
+	}
+
+	public void EliminarMenu(TabVtsPlato plato) throws Exception {
+		if (plato.getMenu() == false)
+			throw new Exception("Este plato ya ha sido quitado al menú");
+		plato.setMenu(false);
+		em.merge(plato);
+	}
+
+	public void EditarMenu(TabVtsPlato plato, int stock) throws Exception {
+		if (plato == null)
+			throw new Exception("No existe el menú especificado.");
+		plato.setStock(stock);
+		em.merge(plato);
 	}
 }

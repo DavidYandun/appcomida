@@ -27,6 +27,12 @@ public class TabVtsDetallePedido implements Serializable {
 	private BigDecimal valortotaldp;
 
 	private BigDecimal valorunitariodp;
+	
+	private boolean segundo;
+	
+	private boolean llevar;
+	
+	private boolean tarjeta;
 
 	//bi-directional many-to-one association to TabVtsPedido
 	@ManyToOne
@@ -88,5 +94,28 @@ public class TabVtsDetallePedido implements Serializable {
 	public void setTabVtsPlato(TabVtsPlato tabVtsPlato) {
 		this.tabVtsPlato = tabVtsPlato;
 	}
+	
+	public Boolean getSegundo() {
+		return this.segundo;
+	}
 
+	public void setSegundo(Boolean segundo) {
+		this.segundo = segundo;
+	}
+	
+	public Boolean getLlevar() {
+		return this.llevar;
+	}
+
+	public void setLlevar(Boolean llevar) {
+		this.llevar = llevar;
+	}
+
+	public Boolean getTarjeta() {
+		return this.tarjeta;
+	}
+
+	public void setTarjeta(Boolean tarjeta) {
+		this.tarjeta = tarjeta;
+	}
 }

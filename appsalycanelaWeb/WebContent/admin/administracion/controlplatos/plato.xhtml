@@ -53,7 +53,6 @@
 						<p:commandButton value="Agregar" update="@form,:form2:tabla1"
 							actionListener="#{controllerPlato.AgregarPlato()}"
 							onclick="PF('modal').hide();$('#form1').trigger('reset');"></p:commandButton>
-
 					</h:form>
 				</p:dialog>
 
@@ -86,6 +85,9 @@
 							<p:column headerText="Estado Plato">
 								<h:outputText value="#{p.estadoplato}" />
 							</p:column>
+							<p:column headerText="Menu">
+								<h:outputText value="#{p.menu}" />
+							</p:column>
 							<p:column headerText="EDITAR">
 								<p:commandButton icon="ui-icon-pencil" update="form4"
 									onclick="PF('dialogo1').show();"
@@ -103,7 +105,7 @@
 			</h:panelGrid>
 
 			<p:dialog header="Edición de Categoría de Platos"
-				widgetVar="dialogo1" id="dialogo1" modal="true" height="330"
+				widgetVar="dialogo1" id="dialogo1" modal="true" height="450"
 				hideEffect="fade">
 				<h:form id="form4">
 
@@ -137,6 +139,8 @@
 								requiredMessage="Especifique el stock" min="0"/>
 							<h:outputText value="Estado" />
 							<p:inputSwitch value="#{controllerPlato.estadoplato}"></p:inputSwitch>
+							<h:outputText value="Menú" />
+							<p:inputSwitch value="#{controllerPlato.menu}"></p:inputSwitch>
 						</p:panelGrid>
 					<p:commandButton value="Actualizar" update="@form,:form2:tabla1"
 						actionListener="#{controllerPlato.EditarPlato()}"

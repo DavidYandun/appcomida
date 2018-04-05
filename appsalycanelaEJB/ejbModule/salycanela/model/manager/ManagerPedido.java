@@ -15,6 +15,7 @@ import salycanela.model.entities.TabAdmUsuario;
 import salycanela.model.entities.TabParametro;
 import salycanela.model.entities.TabVtsCaja;
 import salycanela.model.entities.TabVtsDetallePedido;
+import salycanela.model.entities.TabVtsMenu;
 import salycanela.model.entities.TabVtsPedido;
 import salycanela.model.entities.TabVtsPlato;
 import salycanela.model.entities.TabVtsTipoPlato;
@@ -61,9 +62,10 @@ public class ManagerPedido {
 		return pedidoTmp;
 	}
 
-	public void agregarDetallePedidoTmp(TabVtsPedido pedidoTmp, Integer idplato, Integer cantidad, boolean pedidonormal)
-			throws Exception {
-		double valorTotal;
+	public void agregarDetallePedidoTmp(TabVtsPedido pedidoTmp, Integer idplato, Integer cantidad, boolean segundo,
+			boolean llevar, boolean tarjeta) throws Exception {
+		double valorTotal = 0;
+		double precio = 0;
 		if (pedidoTmp == null)
 			throw new Exception("Error primero debe crear un nuevo Pedido.");
 		if (idplato == null || idplato.intValue() < 0)
@@ -79,17 +81,32 @@ public class ManagerPedido {
 		d.setTabVtsPedido(pedidoTmp);
 		d.setTabVtsPlato(p);
 		d.setCantidaddp(cantidad);
-		if (pedidonormal) {
-			valorTotal = cantidad * p.getPrecioplato().doubleValue();
-			d.setValorunitariodp(p.getPrecioplato());
-			d.setValortotaldp(new BigDecimal(valorTotal));
-		} else if (!pedidonormal) {
-			valorTotal = cantidad * p.getPrecioespecialplato().doubleValue();
-			d.setValorunitariodp(p.getPrecioespecialplato());
-			d.setValortotaldp(new BigDecimal(valorTotal));
-		}
-		pedidoTmp.getTabVtsDetallePedidos().add(d);
+		d.setSegundo(segundo);
+		d.setLlevar(llevar);
+		d.setTarjeta(tarjeta);
 
+		if (!tarjeta) {
+			if (segundo) {
+				precio = p.getPrecioespecialplato().doubleValue();
+			} else {
+				precio = p.getPrecioplato().doubleValue();
+			}
+			if (llevar)
+				precio = precio + 0.25;
+		}
+		valorTotal = cantidad * precio;
+		d.setValorunitariodp(new BigDecimal(precio));
+		d.setValortotaldp(new BigDecimal(valorTotal));
+
+		pedidoTmp.getTabVtsDetallePedidos().add(d);
+		// verificamos los campos calculados:
+		calcularPedidoTmp(pedidoTmp);
+	}
+
+	public void eliminarDetallePedidoTmp(TabVtsPedido pedidoTmp, int iddp) throws Exception {
+		if (pedidoTmp == null)
+			throw new Exception("Error primero debe crear un nuevo Pedido.");
+		pedidoTmp.getTabVtsDetallePedidos().remove(iddp);
 		// verificamos los campos calculados:
 		calcularPedidoTmp(pedidoTmp);
 	}
@@ -193,7 +210,7 @@ public class ManagerPedido {
 		for (TabVtsDetallePedido det : pedidoTmp.getTabVtsDetallePedidos()) {
 			sumaTotales += det.getCantidaddp().doubleValue() * det.getValorunitariodp().doubleValue();
 		}
-		
+
 		pedidoTmp.setValorpedido(new BigDecimal(sumaTotales));
 	}
 

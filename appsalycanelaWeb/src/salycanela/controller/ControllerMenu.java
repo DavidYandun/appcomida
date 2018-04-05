@@ -47,14 +47,14 @@ public class ControllerMenu {
 		this.plato = plato;
 	}
 
-	public void CargarMenu(TabVtsMenu menu) {
+	public void CargarMenu(TabVtsMenu menu,TabVtsPlato plato) {
 		this.menu = menu;
-		stock = menu.getStock();
+		stock = plato.getStock();
 	}
 
 	public void EditarMenu() {
 		try {
-			managerMenu.editarMenu(menu.getIdmenu(), stock);
+			managerMenu.editarMenu(menu.getTabVtsPlato().getIdplato(), stock);
 			JSFUtil.crearMensajeInfo("Menú editado correctamente.");
 			vaciarCampos();
 		} catch (Exception e) {
@@ -93,7 +93,7 @@ public class ControllerMenu {
 		nombremenu = null;
 		precio1 = null;
 		precio2 = null;
-		stock = 0;
+		stock = 1;
 		plato = null;
 		menu = null;
 	}

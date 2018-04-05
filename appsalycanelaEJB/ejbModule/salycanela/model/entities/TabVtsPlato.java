@@ -27,6 +27,8 @@ public class TabVtsPlato implements Serializable {
 	private String descripcionplato;
 
 	private Boolean estadoplato;
+	
+	private Boolean menu;
 
 	@Column(length=50)
 	private String nombreplato;
@@ -75,6 +77,13 @@ public class TabVtsPlato implements Serializable {
 
 	public void setEstadoplato(Boolean estadoplato) {
 		this.estadoplato = estadoplato;
+	}
+	public Boolean getMenu() {
+		return this.menu;
+	}
+
+	public void setMenu(Boolean menu) {
+		this.menu = menu;
 	}
 
 	public String getNombreplato() {

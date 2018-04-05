@@ -30,7 +30,6 @@
 							<p:panel header="Datos del Pedido">
 								<p:commandButton action="#{controllerPedidoAlm.nuevoPedido()}"
 									value="Crear nuevo Pedido" update="formCabecera :formDetalles" />
-
 								<p:panelGrid columns="2">
 									<h:outputText value="Nro. de Pedido:" style="font-weight: bold" />
 									<h:outputText value="#{controllerPedidoAlm.pedidoTmp.idpedido}" />
@@ -54,143 +53,152 @@
 						</h:form>
 					</p:column>
 					<p:column rowspan="2" style="width:100%;">
-
-
 						<h:form id="formLista">
-							<p:dataGrid value="#{controllerMenu.listamenu}" var="p"
+							<h:panelGrid columns="3" style="margin-bottom:10px"
+								cellpadding="5">
+								<p:selectBooleanCheckbox itemLabel="Segundos"
+									value="#{controllerPedidoAlm.segundo}" />
+								<p:selectBooleanCheckbox itemLabel="Llevar"
+									value="#{controllerPedidoAlm.llevar}" />
+								<p:selectBooleanCheckbox itemLabel="
+								Tarjeta"
+									value="#{controllerPedidoAlm.tarjeta}" />
+							</h:panelGrid>
+							<p:dataGrid value="#{controllerPlato.listamenu}" var="p"
 								columns="3" rows="4" paginator="true"
 								rowsPerPageTemplate="3,4,6">
 								<f:facet name="header">
 									<h:outputText value="Seleccione los platos:" />
 								</f:facet>
+								<p:commandLink
+									actionListener="#{controllerPedidoAlm.insertarDetalle(p)}"
+									update=":formDetalles">
+									<p:panel header="#{p.nombreplato}" style="text-align:center">
+										<p:graphicImage value="/images/platos/#{p.idplato}.jpg"
+											height="100px" />
+										<br />
+										<h:outputText value="#{p.stock}" />
+									</p:panel>
 
-								<p:panel header="#{p.nombremenu}" style="text-align:center">
-									<p:commandLink
-										actionListener="#{controllerPedidoAlm.insertarDetalle(p.tabVtsPlato)}"
-										update=":formDetalles:detalle">
-										<h:panelGrid columns="1" style="width:100%">
-											<p:graphicImage
-												value="/images/platos/#{p.tabVtsPlato.idplato}.jpg"
-												height="100px" />
-											<h:outputText value="#{p.stock}" />
-										</h:panelGrid>
-									</p:commandLink>
 									<p:effect type="pulsate" event="click" />
-								</p:panel>
-
+								</p:commandLink>
 							</p:dataGrid>
 						</h:form>
-
 						<p:draggable for="formLista" containment="parent" />
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column>
 						<h:form id="formDetalles">
-							<p:panel header="Detalles pedido:" id="detalle">
-								<p:dataTable
-									value="#{controllerPedidoAlm.pedidoTmp.tabVtsDetallePedidos}"
-									var="d" id="tablaFacturaDets">
-									<p:column headerText="Cant" style="width:40px; text-align:right">
-										<h:outputText value="#{d.cantidaddp}" />
-									</p:column>
-									<p:column headerText="Detalle">
-										<h:outputText value="#{d.tabVtsPlato.nombreplato}" />
-									</p:column>
-
-									<p:column headerText="V.Unit" footerText="Total"
-										style="width:45px; text-align:right">
-										<h:outputText value="#{d.valorunitariodp}" />
-									</p:column>
-									<p:column headerText="V.Total" footerText=""
-										style="width:50px;text-align:right">
-										<h:outputText value="#{d.valortotaldp}"
-											style="text-align:right">
-											<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
-												currencySymbol="$" />
+							<p:dataTable
+								value="#{controllerPedidoAlm.pedidoTmp.tabVtsDetallePedidos}"
+								var="d" id="tablaFacturaDets">
+								<p:column headerText="Supr" style="width:40px; text-align:right">
+									<p:commandButton icon="ui-icon-trash"
+										actionListener="#{controllerPedidoAlm.eliminarDetalle(d.iddp)}" />
+								</p:column>
+								<p:column headerText="Cant" style="width:40px; text-align:right">
+									<h:outputText value="#{d.cantidaddp}" />
+								</p:column>
+								<p:column headerText="Detalle">
+									<h:outputText
+										value="#{controllerPedidoAlm.Segundos(d)}  #{d.tabVtsPlato.nombreplato} #{controllerPedidoAlm.Llevar(d)}" />
+								</p:column>
+								<p:column headerText="V.Unit" footerText="Total"
+									style="width:45px; text-align:right">
+									<h:outputText value="#{d.valorunitariodp}" />
+								</p:column>
+								<p:column headerText="V.Total" footerText=""
+									style="width:50px;text-align:right">
+									<h:outputText value="#{d.valortotaldp}"
+										style="text-align:right">
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
+											currencySymbol="$" />
+									</h:outputText>
+									<f:facet name="footer">
+										<h:outputText style="text-align:right"
+											value="#{controllerPedidoAlm.pedidoTmp.valorpedido}">
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
 										</h:outputText>
-										<f:facet name="footer">
-											<h:outputText style="text-align:right"
-												value="#{controllerPedidoAlm.pedidoTmp.valorpedido}">
-												<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
-											</h:outputText>
-										</f:facet>
-									</p:column>
-								</p:dataTable>
-							</p:panel>
-							<p:poll interval="3"
-								listener="#{controllerPedidoAlm.actualizarTablas()}"
-								update="form_sinentregar :form_entregado" />
-						</h:form>
-					</p:column>
-				</p:row>
-				<p:row>
-					<!-- Lista de pedidos que ya salieron o que estan por salir -->
-					<p:column>
-						<h:form id="form_sinentregar">
-							<p:dataScroller value="#{controllerPedidoAlm.lista_x_entregar}"
-								var="p" chunkSize="5">
-								<h:panelGrid columns="2" style="width:40%"
-									columnClasses="cabecera,detalle">
-									<p:outputPanel>
-										<h:panelGrid columns="2" cellpadding="5">
-											<h:outputText value="Pedido:" />
-											<h:outputText value="#{p.idpedido}" style="font-weight: bold" />
-											<h:outputText value="Mesa:" />
-											<h:outputText value="#{p.mesapedido}"
-												style="font-weight: bold" />
-										</h:panelGrid>
-										<p:dataTable value="#{controllerPedidoAlm.CargarPedido(p)}"
-											var="d">
-											<p:column headerText="Cant" style="width:50px">
-												<h:outputText value="#{d.cantidaddp}" />
-											</p:column>
-											<p:column headerText="Producto" style="width:150px">
-												<h:outputText value="#{d.tabVtsPlato.nombreplato}" />
-											</p:column>
-											<p:column headerText="Precio" style="width:50px">
-												<h:outputText value="#{d.valortotaldp}" />
-											</p:column>
-										</p:dataTable>
-									</p:outputPanel>
-								</h:panelGrid>
-							</p:dataScroller>
-						</h:form>
-					</p:column>
-					<p:column>
-						<h:form id="form_entregado" position="north">
-							<p:panel header="LISTA DE PEDIDOS ENTREGADOS">
-								<p:dataTable value="#{controllerPedidoAlm.lista_entregado}"
-									var="p" id="tabla1">
+									</f:facet>
+								</p:column>
+							</p:dataTable>
 
-									<p:column headerText="Fecha">
-										<h:outputText value="#{p.fechapedido}" />
-									</p:column>
-									<p:column headerText="N° Pedido">
-										<h:outputText value="#{p.idpedido}" />
-									</p:column>
-									<p:column headerText="Mesa">
-										<h:outputText value="#{p.mesapedido}" />
-									</p:column>
-									<p:column headerText="Valor">
-										<h:outputText value="#{p.valorpedido}" />
-									</p:column>
-									<p:column headerText="Acción">
-										<p:splitButton value="Ver" onclick="PF('dialogo1').show();"
-											update="form4"
-											actionListener="#{controllerPedidoAlm.CargarPedido(p)}"
-											icon="ui-icon-disk">
-											<p:menuitem value="Retornar"
-												actionListener="#{controllerPedidoAlm.EntregarPedido(p,false)}"
-												icon="ui-icon-arrowrefresh-1-w" />
-										</p:splitButton>
-									</p:column>
-								</p:dataTable>
-							</p:panel>
+							<p:poll interval="1"
+								listener="#{controllerPedidoAlm.actualizarTablas()}"
+								update="form_sinentregar :form_entregado :formDetalles" />
 						</h:form>
 					</p:column>
 				</p:row>
 			</p:panelGrid>
+
+			<!-- Lista de pedidos que ya salieron o que estan por salir -->
+			<p:panelGrid columns="2">
+				<h:form id="form_sinentregar">
+					<p:dataScroller value="#{controllerPedidoAlm.lista_x_entregar}"
+						var="p" chunkSize="5">
+						<h:panelGrid columns="2" style="width:40%"
+							columnClasses="cabecera,detalle">
+							<p:outputPanel>
+								<h:panelGrid columns="2">
+									<h:panelGrid columns="2" cellpadding="5">
+										<h:outputText value="Pedido:" />
+										<h:outputText value="#{p.idpedido}" style="font-weight: bold" />
+										<h:outputText value="Mesa:" />
+										<h:outputText value="#{p.mesapedido}"
+											style="font-weight: bold" />
+									</h:panelGrid>
+									<p:commandButton value="Entregar"
+										actionListener="#{controllerPedidoAlm.EntregarPedido(p,true)}" />
+								</h:panelGrid>
+								<p:dataTable value="#{controllerPedidoAlm.CargarPedido(p)}"
+									var="d">
+									<p:column headerText="Cant" style="width:50px">
+										<h:outputText value="#{d.cantidaddp}" />
+									</p:column>
+									<p:column headerText="Producto" style="width:150px">
+										<h:outputText
+											value="#{controllerPedidoAlm.Segundos(d)}  #{d.tabVtsPlato.nombreplato} #{controllerPedidoAlm.Llevar(d)}" />
+									</p:column>
+
+								</p:dataTable>
+							</p:outputPanel>
+						</h:panelGrid>
+						<p:separator />
+					</p:dataScroller>
+				</h:form>
+
+				<h:form id="form_entregado" position="north">
+					<p:panel header="LISTA DE PEDIDOS ENTREGADOS">
+						<p:dataTable value="#{controllerPedidoAlm.lista_entregado}"
+							var="p" id="tabla1">
+							<p:column headerText="Fecha">
+								<h:outputText value="#{p.fechapedido}" />
+							</p:column>
+							<p:column headerText="N° Pedido">
+								<h:outputText value="#{p.idpedido}" />
+							</p:column>
+							<p:column headerText="Mesa">
+								<h:outputText value="#{p.mesapedido}" />
+							</p:column>
+							<p:column headerText="Valor">
+								<h:outputText value="#{p.valorpedido}" />
+							</p:column>
+							<p:column headerText="Acción">
+								<p:splitButton value="Ver" onclick="PF('dialogo1').show();"
+									update="form4"
+									actionListener="#{controllerPedidoAlm.CargarPedido(p)}"
+									icon="ui-icon-disk">
+									<p:menuitem value="Retornar"
+										actionListener="#{controllerPedidoAlm.EntregarPedido(p,false)}"
+										icon="ui-icon-arrowrefresh-1-w" />
+								</p:splitButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</h:form>
+			</p:panelGrid>
+
 
 			<p:dialog header="Pedido" widgetVar="dialogo1" id="dialogo1"
 				width="500" modal="true" hideEffect="fade">
