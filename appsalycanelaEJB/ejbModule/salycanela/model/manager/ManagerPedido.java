@@ -15,7 +15,6 @@ import salycanela.model.entities.TabAdmUsuario;
 import salycanela.model.entities.TabParametro;
 import salycanela.model.entities.TabVtsCaja;
 import salycanela.model.entities.TabVtsDetallePedido;
-import salycanela.model.entities.TabVtsMenu;
 import salycanela.model.entities.TabVtsPedido;
 import salycanela.model.entities.TabVtsPlato;
 import salycanela.model.entities.TabVtsTipoPlato;
@@ -142,6 +141,7 @@ public class ManagerPedido {
 
 		// verificamos los campos calculados:
 		calcularPedidoTmp(pedidoTmp);
+		quitarStock(pedidoTmp);
 
 		// guardamos el pedido completa en la bdd:
 		em.persist(transaccionTmp);
@@ -179,14 +179,6 @@ public class ManagerPedido {
 
 	}
 
-	/*
-	 * public List<TabVtsDetallePedido> findAllDetallesPedidoxId(TabVtsPedido
-	 * pedido) { Query q; List<TabVtsDetallePedido> listado; String sentenciaSQL;
-	 * sentenciaSQL =
-	 * "SELECT d FROM TabVtsDetallePedido d WHERE d.TabVtsPedido="+pedido; q =
-	 * em.createQuery(sentenciaSQL); listado = q.getResultList(); return listado; }
-	 */
-
 	public void entregarPedido(int idpedido, boolean entregapedido) throws Exception {
 		TabVtsPedido p = em.find(TabVtsPedido.class, idpedido);
 		if (p == null)
@@ -212,6 +204,14 @@ public class ManagerPedido {
 		}
 
 		pedidoTmp.setValorpedido(new BigDecimal(sumaTotales));
+	}
+
+	public void quitarStock(TabVtsPedido pedidoTmp) {
+		for (TabVtsDetallePedido det : pedidoTmp.getTabVtsDetallePedidos()) {
+			TabVtsPlato p = em.find(TabVtsPlato.class, det.getTabVtsPlato().getIdplato());
+			p.setStock(p.getStock() - det.getCantidaddp());
+			em.merge(p);
+		}
 	}
 
 	private int getContPedidos() throws Exception {

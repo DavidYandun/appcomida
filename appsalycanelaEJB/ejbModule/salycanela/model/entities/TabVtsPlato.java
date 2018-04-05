@@ -43,9 +43,7 @@ public class TabVtsPlato implements Serializable {
 	@OneToMany(mappedBy="tabVtsPlato")
 	private List<TabVtsDetallePedido> tabVtsDetallePedidos;
 
-	//bi-directional many-to-one association to TabVtsMenu
-	@OneToMany(mappedBy="tabVtsPlato")
-	private List<TabVtsMenu> tabVtsMenus;
+	
 
 	//bi-directional many-to-one association to TabVtsTipoPlato
 	@ManyToOne
@@ -140,27 +138,6 @@ public class TabVtsPlato implements Serializable {
 		return tabVtsDetallePedido;
 	}
 
-	public List<TabVtsMenu> getTabVtsMenus() {
-		return this.tabVtsMenus;
-	}
-
-	public void setTabVtsMenus(List<TabVtsMenu> tabVtsMenus) {
-		this.tabVtsMenus = tabVtsMenus;
-	}
-
-	public TabVtsMenu addTabVtsMenus(TabVtsMenu tabVtsMenus) {
-		getTabVtsMenus().add(tabVtsMenus);
-		tabVtsMenus.setTabVtsPlato(this);
-
-		return tabVtsMenus;
-	}
-
-	public TabVtsMenu removeTabVtsMenus(TabVtsMenu tabVtsMenus) {
-		getTabVtsMenus().remove(tabVtsMenus);
-		tabVtsMenus.setTabVtsPlato(null);
-
-		return tabVtsMenus;
-	}
 
 	public TabVtsTipoPlato getTabVtsTipoPlato() {
 		return this.tabVtsTipoPlato;

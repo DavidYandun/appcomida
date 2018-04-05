@@ -11,12 +11,12 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import salycanela.model.entities.TabVtsDetallePedido;
-import salycanela.model.entities.TabVtsMenu;
+
 //import salycanela.model.entities.TabVtsDetallePedido;
 import salycanela.model.entities.TabVtsPedido;
 import salycanela.model.entities.TabVtsPlato;
 import salycanela.model.entities.TabVtsTransaccion;
-import salycanela.model.manager.ManagerMenu;
+
 import salycanela.model.manager.ManagerPedido;
 import salycanela.model.manager.ManagerPlato;
 import salycanela.view.util.JSFUtil;
@@ -33,9 +33,7 @@ public class ControllerPedidoAlm {
 
 	private List<TabVtsPedido> lista_x_entregar;
 	private List<TabVtsPedido> lista_entregado;
-	@EJB
-	private ManagerMenu managerMenu;
-	private List<TabVtsMenu> listamenu;
+	private List<TabVtsPlato> listamenu;
 
 	private int cantidad;
 	private int idplato;
@@ -64,7 +62,7 @@ public class ControllerPedidoAlm {
 	public void actualizarTablas() {
 		lista_x_entregar = managerPedido.findAllPedidosXentregar();
 		lista_entregado = managerPedido.findAllPedidosEntregado();
-		listamenu = managerMenu.findAllMenu();
+		listamenu=managerPlato.findAllMenu(1);
 	}
 
 	public void nuevoPedido() {
@@ -131,8 +129,7 @@ public class ControllerPedidoAlm {
 			managerPedido.guardarPedidoTemporal(transaccionTmp, pedidoTmp);
 			transaccionTmpGuardada = true;
 			pedidoTmpGuardada = true;
-			lista_x_entregar = managerPedido.findAllPedidosXentregar();
-			lista_entregado = managerPedido.findAllPedidosEntregado();
+			actualizarTablas();
 			JSFUtil.crearMensajeInfo("Pedido guardado exitosamente");
 		} catch (Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());
@@ -326,14 +323,6 @@ public class ControllerPedidoAlm {
 		this.detalleTmp = detalleTmp;
 	}
 
-	public List<TabVtsMenu> getListamenu() {
-		return listamenu;
-	}
-
-	public void setListamenu(List<TabVtsMenu> listamenu) {
-		this.listamenu = listamenu;
-	}
-
 	public boolean isSegundo() {
 		return segundo;
 	}
@@ -358,4 +347,13 @@ public class ControllerPedidoAlm {
 		this.tarjeta = tarjeta;
 	}
 
+	public List<TabVtsPlato> getListamenu() {
+		return listamenu;
+	}
+
+	public void setListamenu(List<TabVtsPlato> listamenu) {
+		this.listamenu = listamenu;
+	}
+
+	
 }

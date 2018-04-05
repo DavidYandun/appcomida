@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import salycanela.model.entities.TabVtsMenu;
 import salycanela.model.entities.TabVtsPlato;
 import salycanela.model.entities.TabVtsTipoPlato;
 

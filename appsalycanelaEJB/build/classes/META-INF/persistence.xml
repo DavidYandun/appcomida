@@ -10,7 +10,6 @@
 		<class>salycanela.model.entities.TabVtsDetalleFactura</class>
 		<class>salycanela.model.entities.TabVtsDetallePedido</class>
 		<class>salycanela.model.entities.TabVtsFactura</class>
-		<class>salycanela.model.entities.TabVtsMenu</class>
 		<class>salycanela.model.entities.TabVtsPedido</class>
 		<class>salycanela.model.entities.TabVtsPlato</class>
 		<class>salycanela.model.entities.TabVtsTipoPlato</class>

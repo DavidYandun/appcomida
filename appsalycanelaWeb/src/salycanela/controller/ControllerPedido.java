@@ -31,6 +31,7 @@ public class ControllerPedido {
 
 	private List<TabVtsPedido> lista_x_entregar;
 	private List<TabVtsPedido> lista_entregado;
+	private List<TabVtsPlato> listamenu;
 
 	private int cantidad;
 	private int idplato;
@@ -58,6 +59,7 @@ public class ControllerPedido {
 		lista_entregado = managerPedido.findAllPedidosEntregado();
 		transaccionTmp = managerPedido.crearTransaccionTmp();
 		pedidoTmp = managerPedido.crearPedidoTmp(transaccionTmp);
+		listamenu=managerPlato.findAllMenu(1);
 		// detalles
 		cantidad = 1;
 		idplato = 0;
@@ -76,7 +78,7 @@ public class ControllerPedido {
 			return "";
 		}
 		try {
-			managerPedido.agregarDetallePedidoTmp(pedidoTmp, idplato, cantidad, pedidonormal);
+			managerPedido.agregarDetallePedidoTmp(pedidoTmp, idplato, cantidad,false,false,false);
 			idplato = 0;
 			cantidad = 1;
 		} catch (Exception e) {
@@ -108,6 +110,7 @@ public class ControllerPedido {
 			pedidoTmpGuardada = true;
 			lista_x_entregar = managerPedido.findAllPedidosXentregar();
 			lista_entregado = managerPedido.findAllPedidosEntregado();
+			listamenu=managerPlato.findAllMenu(1);
 			JSFUtil.crearMensajeInfo("Pedido guardado exitosamente");
 		} catch (Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());
