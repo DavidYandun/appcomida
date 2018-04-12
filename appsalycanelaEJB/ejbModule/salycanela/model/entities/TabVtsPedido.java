@@ -7,19 +7,18 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * The persistent class for the tab_vts_pedido database table.
  * 
  */
 @Entity
-@Table(name="tab_vts_pedido")
-@NamedQuery(name="TabVtsPedido.findAll", query="SELECT t FROM TabVtsPedido t")
+@Table(name = "tab_vts_pedido")
+@NamedQuery(name = "TabVtsPedido.findAll", query = "SELECT t FROM TabVtsPedido t")
 public class TabVtsPedido implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(unique=true, nullable=false)
+	@Column(unique = true, nullable = false)
 	private Integer idpedido;
 
 	private Boolean anulapedido;
@@ -33,18 +32,23 @@ public class TabVtsPedido implements Serializable {
 
 	private BigDecimal valorpedido;
 
-	//bi-directional many-to-one association to TabVtsDetallePedido
-	@OneToMany(mappedBy="tabVtsPedido",cascade=CascadeType.ALL)
+	// bi-directional many-to-one association to TabVtsDetallePedido
+	@OneToMany(mappedBy = "tabVtsPedido", cascade = CascadeType.ALL)
 	private List<TabVtsDetallePedido> tabVtsDetallePedidos;
 
-	//bi-directional many-to-one association to TabAdmUsuario
+	// bi-directional many-to-one association to TabAdmUsuario
 	@ManyToOne
-	@JoinColumn(name="idusuario")
+	@JoinColumn(name = "idusuario")
 	private TabAdmUsuario tabAdmUsuario;
 
-	//bi-directional many-to-one association to TabVtsTransaccion
+	// bi-directional many-to-one association to TabVtsCocina
 	@ManyToOne
-	@JoinColumn(name="idtransaccion")
+	@JoinColumn(name = "idcocina")
+	private TabVtsCocina tabVtsCocina;
+
+	// bi-directional many-to-one association to TabVtsTransaccion
+	@ManyToOne
+	@JoinColumn(name = "idtransaccion")
 	private TabVtsTransaccion tabVtsTransaccion;
 
 	public TabVtsPedido() {
@@ -126,6 +130,14 @@ public class TabVtsPedido implements Serializable {
 
 	public void setTabAdmUsuario(TabAdmUsuario tabAdmUsuario) {
 		this.tabAdmUsuario = tabAdmUsuario;
+	}
+
+	public TabVtsCocina getTabVtsCocina() {
+		return this.tabVtsCocina;
+	}
+
+	public void setTabVtsCocina(TabVtsCocina tabVtsCocina) {
+		this.tabVtsCocina = tabVtsCocina;
 	}
 
 	public TabVtsTransaccion getTabVtsTransaccion() {

@@ -27,7 +27,8 @@ public class ManagerPlato {
 	}
 
 	public void agregarPlato(int idtipoplato, String nombreplato, String descripcionplato, BigDecimal precioplato,
-			BigDecimal precioespecialplato, boolean estadoplato, int stock, boolean menu) throws Exception {
+			BigDecimal precioespecialplato, boolean estadoplato, int stock, boolean menu, String foto)
+			throws Exception {
 
 		Boolean bandera = false;
 		for (TabVtsPlato plato : findAllPlatos()) {
@@ -48,6 +49,7 @@ public class ManagerPlato {
 		p.setEstadoplato(estadoplato);
 		p.setStock(stock);
 		p.setMenu(menu);
+		p.setFoto(foto);
 		em.persist(p);
 	}
 
@@ -57,8 +59,8 @@ public class ManagerPlato {
 	}
 
 	public void editarPlato(int idplato, int idtipoplato, String nombreplato, String descripcionplato,
-			BigDecimal precioplato, BigDecimal precioespecialplato, boolean estadoplato, int stock, boolean menu)
-			throws Exception {
+			BigDecimal precioplato, BigDecimal precioespecialplato, boolean estadoplato, int stock, boolean menu,
+			String foto) throws Exception {
 
 		TabVtsPlato p = findPlatoById(idplato);
 		if (p == null)
@@ -80,6 +82,7 @@ public class ManagerPlato {
 		p.setEstadoplato(estadoplato);
 		p.setStock(stock);
 		p.setMenu(menu);
+		p.setFoto(foto);
 		em.merge(p);
 	}
 
@@ -87,7 +90,7 @@ public class ManagerPlato {
 		Query q;
 		List<TabVtsPlato> listado;
 		String sentenciaSQL;
-		sentenciaSQL = "SELECT p FROM TabVtsPlato p ORDER BY p.tabVtsTipoPlato";
+		sentenciaSQL = "SELECT p FROM TabVtsPlato p ORDER BY p.idplato";
 		q = em.createQuery(sentenciaSQL);
 		listado = q.getResultList();
 		return listado;
@@ -97,7 +100,8 @@ public class ManagerPlato {
 		Query q;
 		List<TabVtsPlato> listado;
 		String sentenciaSQL;
-		sentenciaSQL = "SELECT p FROM TabVtsPlato p WHERE p.tabVtsTipoPlato.idtipoplato=" + tipoplato + " AND p.menu=false";
+		sentenciaSQL = "SELECT p FROM TabVtsPlato p WHERE p.tabVtsTipoPlato.idtipoplato=" + tipoplato
+				+ " AND p.menu=false";
 		q = em.createQuery(sentenciaSQL);
 		listado = q.getResultList();
 		return listado;
@@ -107,7 +111,7 @@ public class ManagerPlato {
 		Query q;
 		List<TabVtsPlato> listado;
 		String sentenciaSQL = "SELECT p FROM TabVtsPlato p WHERE p.tabVtsTipoPlato.idtipoplato=" + tipoplato
-				+ " AND p.menu=true";
+				+ " AND p.menu=true ORDER BY p.nombreplato";
 		q = em.createQuery(sentenciaSQL);
 		listado = q.getResultList();
 		return listado;

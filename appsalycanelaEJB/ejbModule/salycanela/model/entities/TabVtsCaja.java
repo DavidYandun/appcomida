@@ -6,25 +6,24 @@ import java.math.BigDecimal;
 import javax.persistence.*;
 import java.util.List;
 
-
 /**
  * The persistent class for the tab_vts_caja database table.
  * 
  */
 @Entity
-@Table(name="tab_vts_caja")
-@NamedQuery(name="TabVtsCaja.findAll", query="SELECT t FROM TabVtsCaja t")
+@Table(name = "tab_vts_caja")
+@NamedQuery(name = "TabVtsCaja.findAll", query = "SELECT t FROM TabVtsCaja t")
 public class TabVtsCaja implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(unique=true, nullable=false, length=50)
+	@Column(unique = true, nullable = false, length = 50)
 	private String idcaja;
 
 	private BigDecimal actualcaja;
 
-	//bi-directional many-to-one association to TabVtsTransaccion
-	@OneToMany(mappedBy="tabVtsCaja")
+	// bi-directional many-to-one association to TabVtsTransaccion
+	@OneToMany(mappedBy = "tabVtsCaja")
 	private List<TabVtsTransaccion> tabVtsTransaccions;
 
 	public TabVtsCaja() {

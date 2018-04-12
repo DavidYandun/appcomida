@@ -34,9 +34,14 @@
 							<h:outputText value="Nombre del Plato " />
 							<p:inputText value="#{controllerPlato.nombreplato}"
 								required="true" requiredMessage="Especifique el nombre" />
+
 							<h:outputText value="Descripción " />
 							<p:inputTextarea value="#{controllerPlato.descripcionplato}"
-								required="true" requiredMessage="Especifique la descripción" rows="3" cols="20"/>
+								required="true" requiredMessage="Especifique la descripción"
+								rows="3" cols="20" />
+							<h:outputText value="URL-foto: " />
+							<p:inputText value="#{controllerPlato.foto}" required="true"
+								requiredMessage="Especifique la dirección de la imagen" />
 							<h:outputText value="Precio Normal " />
 							<p:inputNumber value="#{controllerPlato.precioplato}"
 								symbol=" USD" symbolPosition="s" decimalSeparator=","
@@ -47,7 +52,7 @@
 								thousandSeparator="." />
 							<h:outputText value="Stock " />
 							<p:spinner value="#{controllerPlato.stock}" required="true"
-								requiredMessage="Especifique el stock" min="0"/>
+								requiredMessage="Especifique el stock" min="0" />
 
 						</p:panelGrid>
 						<p:commandButton value="Agregar" update="@form,:form2:tabla1"
@@ -58,19 +63,43 @@
 
 				<h:form id="form2">
 					<p:panel header="LISTA DE REGISTROS">
-						<p:dataTable value="#{controllerPlato.lista}" var="p"
-							id="tabla1">
-							<p:column headerText="Código">
+						<p:dataTable value="#{controllerPlato.lista}" var="p" id="tabla1"
+							widgetVar="platosTable"
+							emptyMessage="No existen platos con el filtro aplicado"
+							filteredValue="#{controllerPlato.filtroPlatos}">
+
+							<f:facet name="header">
+								<p:outputPanel>
+									<h:outputText value="Buscar todos los campos:" />
+									<p:inputText id="globalFilter"
+										onkeyup="PF('platosTable').filter()" style="width:150px"
+										placeholder="Ingrese palabra" />
+								</p:outputPanel>
+							</f:facet>
+
+							<p:column headerText="Código" filterBy="#{p.idplato}"
+								filterMatchMode="contains">
 								<h:outputText value="#{p.idplato}" />
 							</p:column>
-							
-							<p:column headerText="Nombre Plato">
+
+							<p:column headerText="Nombre Plato" filterBy="#{p.nombreplato}"
+								filterMatchMode="contains">
 								<h:outputText value="#{p.nombreplato}" />
 							</p:column>
-							<p:column headerText="Categoría">
+							<p:column headerText="Categoría"
+								filterBy="#{p.tabVtsTipoPlato.idtipoplato}"
+								filterMatchMode="exact">
+								<f:facet name="filter">
+									<p:selectOneMenu onchange="PF('platosTable').filter()">
+										<f:selectItem itemLabel="Select One" itemValue="#{null}"
+											noSelectionOption="true" />
+										<f:selectItems value="#{controllerPlato.listaTipoPlatoSI}" />
+									</p:selectOneMenu>
+								</f:facet>
 								<h:outputText value="#{p.tabVtsTipoPlato.nombretipoplato}" />
 							</p:column>
-							<p:column headerText="Descripción">
+							<p:column headerText="Descripción"
+								filterBy="#{p.descripcionplato}" filterMatchMode="contains">
 								<h:outputText value="#{p.descripcionplato}" />
 							</p:column>
 							<p:column headerText="Precio">
@@ -84,9 +113,6 @@
 							</p:column>
 							<p:column headerText="Estado Plato">
 								<h:outputText value="#{p.estadoplato}" />
-							</p:column>
-							<p:column headerText="Menu">
-								<h:outputText value="#{p.menu}" />
 							</p:column>
 							<p:column headerText="EDITAR">
 								<p:commandButton icon="ui-icon-pencil" update="form4"
@@ -109,39 +135,43 @@
 				hideEffect="fade">
 				<h:form id="form4">
 
-				<p:panelGrid columns="2">
-				<h:outputText value="Código Plato" />
-				<h:outputText value="#{controllerPlato.idplato}" />
-							<h:outputText value="Categoría" />
-							<h:panelGroup>
-								<p:selectOneMenu value="#{controllerPlato.idtipoplato}">
-									<f:selectItem itemLabel="Seleccione..." itemValue=""
-										noSelectionOption="true" />
-									<f:selectItems value="#{controllerPlato.listaTipoPlatoSI}" />
-								</p:selectOneMenu>
-							</h:panelGroup>
-							<h:outputText value="Nombre del Plato " />
-							<p:inputText value="#{controllerPlato.nombreplato}"
-								required="true" requiredMessage="Especifique el nombre" />
-							<h:outputText value="Descripción " />
-							<p:inputTextarea value="#{controllerPlato.descripcionplato}"
-								required="true" requiredMessage="Especifique la descripción" rows="3" cols="20"/>
-							<h:outputText value="Precio Normal " />
-							<p:inputNumber value="#{controllerPlato.precioplato}"
-								symbol=" USD" symbolPosition="s" decimalSeparator=","
-								thousandSeparator="." />
-							<h:outputText value="Precio especial " />
-							<p:inputNumber value="#{controllerPlato.precioespecialplato}"
-								symbol=" USD" symbolPosition="s" decimalSeparator=","
-								thousandSeparator="." />
-							<h:outputText value="Stock " />
-							<p:spinner value="#{controllerPlato.stock}" required="true"
-								requiredMessage="Especifique el stock" min="0"/>
-							<h:outputText value="Estado" />
-							<p:inputSwitch value="#{controllerPlato.estadoplato}"></p:inputSwitch>
-							<h:outputText value="Menú" />
-							<p:inputSwitch value="#{controllerPlato.menu}"></p:inputSwitch>
-						</p:panelGrid>
+					<p:panelGrid columns="2">
+						<h:outputText value="Código Plato" />
+						<h:outputText value="#{controllerPlato.idplato}" />
+						<h:outputText value="Categoría" />
+						<h:panelGroup>
+							<p:selectOneMenu value="#{controllerPlato.idtipoplato}">
+								<f:selectItem itemLabel="Seleccione..." itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{controllerPlato.listaTipoPlatoSI}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+						<h:outputText value="Nombre del Plato " />
+						<p:inputText value="#{controllerPlato.nombreplato}"
+							required="true" requiredMessage="Especifique el nombre" />
+						<h:outputText value="URL-foto: " />
+						<p:inputText value="#{controllerPlato.foto}" required="true"
+							requiredMessage="Especifique la dirección de la imagen" />
+						<h:outputText value="Descripción " />
+						<p:inputTextarea value="#{controllerPlato.descripcionplato}"
+							required="true" requiredMessage="Especifique la descripción"
+							rows="3" cols="20" />
+						<h:outputText value="Precio Normal " />
+						<p:inputNumber value="#{controllerPlato.precioplato}"
+							symbol=" USD" symbolPosition="s" decimalSeparator=","
+							thousandSeparator="." />
+						<h:outputText value="Precio especial " />
+						<p:inputNumber value="#{controllerPlato.precioespecialplato}"
+							symbol=" USD" symbolPosition="s" decimalSeparator=","
+							thousandSeparator="." />
+						<h:outputText value="Stock " />
+						<p:spinner value="#{controllerPlato.stock}" required="true"
+							requiredMessage="Especifique el stock" min="0" />
+						<h:outputText value="Estado" />
+						<p:inputSwitch value="#{controllerPlato.estadoplato}"></p:inputSwitch>
+						<h:outputText value="Menú" />
+						<p:inputSwitch value="#{controllerPlato.menu}"></p:inputSwitch>
+					</p:panelGrid>
 					<p:commandButton value="Actualizar" update="@form,:form2:tabla1"
 						actionListener="#{controllerPlato.EditarPlato()}"
 						onclick="PF('modal').hide();$('#form4').trigger('reset');"></p:commandButton>

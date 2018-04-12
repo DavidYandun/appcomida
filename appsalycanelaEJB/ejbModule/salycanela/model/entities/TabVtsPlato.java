@@ -27,7 +27,10 @@ public class TabVtsPlato implements Serializable {
 	private String descripcionplato;
 
 	private Boolean estadoplato;
-	
+
+	@Column(length=300)
+	private String foto;
+
 	private Boolean menu;
 
 	@Column(length=50)
@@ -42,8 +45,6 @@ public class TabVtsPlato implements Serializable {
 	//bi-directional many-to-one association to TabVtsDetallePedido
 	@OneToMany(mappedBy="tabVtsPlato")
 	private List<TabVtsDetallePedido> tabVtsDetallePedidos;
-
-	
 
 	//bi-directional many-to-one association to TabVtsTipoPlato
 	@ManyToOne
@@ -76,6 +77,15 @@ public class TabVtsPlato implements Serializable {
 	public void setEstadoplato(Boolean estadoplato) {
 		this.estadoplato = estadoplato;
 	}
+
+	public String getFoto() {
+		return this.foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
 	public Boolean getMenu() {
 		return this.menu;
 	}
@@ -137,7 +147,6 @@ public class TabVtsPlato implements Serializable {
 
 		return tabVtsDetallePedido;
 	}
-
 
 	public TabVtsTipoPlato getTabVtsTipoPlato() {
 		return this.tabVtsTipoPlato;

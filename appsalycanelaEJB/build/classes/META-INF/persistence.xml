@@ -7,6 +7,7 @@
 		<class>salycanela.model.entities.TabParametro</class>
 		<class>salycanela.model.entities.TabVtsCaja</class>
 		<class>salycanela.model.entities.TabVtsCliente</class>
+		<class>salycanela.model.entities.TabVtsCocina</class>
 		<class>salycanela.model.entities.TabVtsDetalleFactura</class>
 		<class>salycanela.model.entities.TabVtsDetallePedido</class>
 		<class>salycanela.model.entities.TabVtsFactura</class>

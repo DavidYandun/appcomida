@@ -5,43 +5,42 @@ import java.math.BigDecimal;
 
 import javax.persistence.*;
 
-
 /**
  * The persistent class for the tab_vts_detalle_pedido database table.
  * 
  */
 @Entity
-@Table(name="tab_vts_detalle_pedido")
-@NamedQuery(name="TabVtsDetallePedido.findAll", query="SELECT t FROM TabVtsDetallePedido t")
+@Table(name = "tab_vts_detalle_pedido")
+@NamedQuery(name = "TabVtsDetallePedido.findAll", query = "SELECT t FROM TabVtsDetallePedido t")
 public class TabVtsDetallePedido implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TAB_VTS_DETALLE_PEDIDO_IDDP_GENERATOR", sequenceName="TAB_VTS_DETALLE_PEDIDO_SEQ",allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TAB_VTS_DETALLE_PEDIDO_IDDP_GENERATOR")
-	@Column(unique=true, nullable=false)
+	@SequenceGenerator(name = "TAB_VTS_DETALLE_PEDIDO_IDDP_GENERATOR", sequenceName = "TAB_VTS_DETALLE_PEDIDO_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TAB_VTS_DETALLE_PEDIDO_IDDP_GENERATOR")
+	@Column(unique = true, nullable = false)
 	private Integer iddp;
 
 	private Integer cantidaddp;
 
+	private Boolean llevar;
+
+	private Boolean segundo;
+
+	private Boolean tarjeta;
+
 	private BigDecimal valortotaldp;
 
 	private BigDecimal valorunitariodp;
-	
-	private boolean segundo;
-	
-	private boolean llevar;
-	
-	private boolean tarjeta;
 
-	//bi-directional many-to-one association to TabVtsPedido
+	// bi-directional many-to-one association to TabVtsPedido
 	@ManyToOne
-	@JoinColumn(name="idpedido")
+	@JoinColumn(name = "idpedido")
 	private TabVtsPedido tabVtsPedido;
 
-	//bi-directional many-to-one association to TabVtsPlato
+	// bi-directional many-to-one association to TabVtsPlato
 	@ManyToOne
-	@JoinColumn(name="idplato")
+	@JoinColumn(name = "idplato")
 	private TabVtsPlato tabVtsPlato;
 
 	public TabVtsDetallePedido() {
@@ -61,6 +60,30 @@ public class TabVtsDetallePedido implements Serializable {
 
 	public void setCantidaddp(Integer cantidaddp) {
 		this.cantidaddp = cantidaddp;
+	}
+
+	public Boolean getLlevar() {
+		return this.llevar;
+	}
+
+	public void setLlevar(Boolean llevar) {
+		this.llevar = llevar;
+	}
+
+	public Boolean getSegundo() {
+		return this.segundo;
+	}
+
+	public void setSegundo(Boolean segundo) {
+		this.segundo = segundo;
+	}
+
+	public Boolean getTarjeta() {
+		return this.tarjeta;
+	}
+
+	public void setTarjeta(Boolean tarjeta) {
+		this.tarjeta = tarjeta;
 	}
 
 	public BigDecimal getValortotaldp() {
@@ -94,28 +117,5 @@ public class TabVtsDetallePedido implements Serializable {
 	public void setTabVtsPlato(TabVtsPlato tabVtsPlato) {
 		this.tabVtsPlato = tabVtsPlato;
 	}
-	
-	public Boolean getSegundo() {
-		return this.segundo;
-	}
 
-	public void setSegundo(Boolean segundo) {
-		this.segundo = segundo;
-	}
-	
-	public Boolean getLlevar() {
-		return this.llevar;
-	}
-
-	public void setLlevar(Boolean llevar) {
-		this.llevar = llevar;
-	}
-
-	public Boolean getTarjeta() {
-		return this.tarjeta;
-	}
-
-	public void setTarjeta(Boolean tarjeta) {
-		this.tarjeta = tarjeta;
-	}
 }

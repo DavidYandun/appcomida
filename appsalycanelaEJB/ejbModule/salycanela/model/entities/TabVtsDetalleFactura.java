@@ -5,21 +5,20 @@ import java.math.BigDecimal;
 
 import javax.persistence.*;
 
-
 /**
  * The persistent class for the tab_vts_detalle_factura database table.
  * 
  */
 @Entity
-@Table(name="tab_vts_detalle_factura")
-@NamedQuery(name="TabVtsDetalleFactura.findAll", query="SELECT t FROM TabVtsDetalleFactura t")
+@Table(name = "tab_vts_detalle_factura")
+@NamedQuery(name = "TabVtsDetalleFactura.findAll", query = "SELECT t FROM TabVtsDetalleFactura t")
 public class TabVtsDetalleFactura implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TAB_VTS_DETALLE_FACTURA_IDDF_GENERATOR", sequenceName="TAB_VTS_DETALLE_FACTURA_SEQ",allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TAB_VTS_DETALLE_FACTURA_IDDF_GENERATOR")
-	@Column(unique=true, nullable=false)
+	@SequenceGenerator(name = "TAB_VTS_DETALLE_FACTURA_IDDF_GENERATOR", sequenceName = "TAB_VTS_DETALLE_FACTURA_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TAB_VTS_DETALLE_FACTURA_IDDF_GENERATOR")
+	@Column(unique = true, nullable = false)
 	private Integer iddf;
 
 	private Integer cantidaddf;
@@ -28,14 +27,14 @@ public class TabVtsDetalleFactura implements Serializable {
 
 	private BigDecimal valorunitariodf;
 
-	//bi-directional many-to-one association to TabVtsFactura
+	// bi-directional many-to-one association to TabVtsFactura
 	@ManyToOne
-	@JoinColumn(name="idfactura")
+	@JoinColumn(name = "idfactura")
 	private TabVtsFactura tabVtsFactura;
 
-	//bi-directional many-to-one association to TabVtsTipoPlato
+	// bi-directional many-to-one association to TabVtsTipoPlato
 	@ManyToOne
-	@JoinColumn(name="idtipoplato")
+	@JoinColumn(name = "idtipoplato")
 	private TabVtsTipoPlato tabVtsTipoPlato;
 
 	public TabVtsDetalleFactura() {

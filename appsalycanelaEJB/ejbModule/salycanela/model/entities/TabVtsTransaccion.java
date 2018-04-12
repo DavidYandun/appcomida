@@ -7,26 +7,25 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * The persistent class for the tab_vts_transaccion database table.
  * 
  */
 @Entity
-@Table(name="tab_vts_transaccion")
-@NamedQuery(name="TabVtsTransaccion.findAll", query="SELECT t FROM TabVtsTransaccion t")
+@Table(name = "tab_vts_transaccion")
+@NamedQuery(name = "TabVtsTransaccion.findAll", query = "SELECT t FROM TabVtsTransaccion t")
 public class TabVtsTransaccion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TAB_VTS_TRANSACCION_IDTRANSACCION_GENERATOR", sequenceName="TAB_VTS_TRANSACCION_SEQ",allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TAB_VTS_TRANSACCION_IDTRANSACCION_GENERATOR")
-	@Column(unique=true, nullable=false)
+	@SequenceGenerator(name = "TAB_VTS_TRANSACCION_IDTRANSACCION_GENERATOR", sequenceName = "TAB_VTS_TRANSACCION_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TAB_VTS_TRANSACCION_IDTRANSACCION_GENERATOR")
+	@Column(unique = true, nullable = false)
 	private Integer idtransaccion;
 
 	private Boolean anulatransaccion;
 
-	@Column(length=500)
+	@Column(length = 500)
 	private String descripciontransaccion;
 
 	@Temporal(TemporalType.DATE)
@@ -36,18 +35,18 @@ public class TabVtsTransaccion implements Serializable {
 
 	private BigDecimal valortransaccion;
 
-	//bi-directional many-to-one association to TabVtsPedido
-	@OneToMany(mappedBy="tabVtsTransaccion", cascade=CascadeType.ALL)
+	// bi-directional many-to-one association to TabVtsPedido
+	@OneToMany(mappedBy = "tabVtsTransaccion", cascade = CascadeType.ALL)
 	private List<TabVtsPedido> tabVtsPedidos;
 
-	//bi-directional many-to-one association to TabAdmUsuario
+	// bi-directional many-to-one association to TabAdmUsuario
 	@ManyToOne
-	@JoinColumn(name="idusuario")
+	@JoinColumn(name = "idusuario")
 	private TabAdmUsuario tabAdmUsuario;
 
-	//bi-directional many-to-one association to TabVtsCaja
+	// bi-directional many-to-one association to TabVtsCaja
 	@ManyToOne
-	@JoinColumn(name="idcaja")
+	@JoinColumn(name = "idcaja")
 	private TabVtsCaja tabVtsCaja;
 
 	public TabVtsTransaccion() {
@@ -112,14 +111,12 @@ public class TabVtsTransaccion implements Serializable {
 	public TabVtsPedido addTabVtsPedido(TabVtsPedido tabVtsPedido) {
 		getTabVtsPedidos().add(tabVtsPedido);
 		tabVtsPedido.setTabVtsTransaccion(this);
-
 		return tabVtsPedido;
 	}
 
 	public TabVtsPedido removeTabVtsPedido(TabVtsPedido tabVtsPedido) {
 		getTabVtsPedidos().remove(tabVtsPedido);
 		tabVtsPedido.setTabVtsTransaccion(null);
-
 		return tabVtsPedido;
 	}
 

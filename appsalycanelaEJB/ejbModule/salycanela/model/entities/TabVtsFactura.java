@@ -7,19 +7,18 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * The persistent class for the tab_vts_factura database table.
  * 
  */
 @Entity
-@Table(name="tab_vts_factura")
-@NamedQuery(name="TabVtsFactura.findAll", query="SELECT t FROM TabVtsFactura t")
+@Table(name = "tab_vts_factura")
+@NamedQuery(name = "TabVtsFactura.findAll", query = "SELECT t FROM TabVtsFactura t")
 public class TabVtsFactura implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(unique=true, nullable=false)
+	@Column(unique = true, nullable = false)
 	private Integer idfactura;
 
 	private Boolean anulafactura;
@@ -33,18 +32,18 @@ public class TabVtsFactura implements Serializable {
 
 	private BigDecimal totalfactura;
 
-	//bi-directional many-to-one association to TabVtsDetalleFactura
-	@OneToMany(mappedBy="tabVtsFactura",cascade=CascadeType.ALL)
+	// bi-directional many-to-one association to TabVtsDetalleFactura
+	@OneToMany(mappedBy = "tabVtsFactura", cascade = CascadeType.ALL)
 	private List<TabVtsDetalleFactura> tabVtsDetalleFacturas;
 
-	//bi-directional many-to-one association to TabAdmUsuario
+	// bi-directional many-to-one association to TabAdmUsuario
 	@ManyToOne
-	@JoinColumn(name="idusuario")
+	@JoinColumn(name = "idusuario")
 	private TabAdmUsuario tabAdmUsuario;
 
-	//bi-directional many-to-one association to TabVtsCliente
+	// bi-directional many-to-one association to TabVtsCliente
 	@ManyToOne
-	@JoinColumn(name="idcliente")
+	@JoinColumn(name = "idcliente")
 	private TabVtsCliente tabVtsCliente;
 
 	public TabVtsFactura() {

@@ -14,10 +14,11 @@ import javax.persistence.Query;
 import salycanela.model.entities.TabAdmUsuario;
 import salycanela.model.entities.TabParametro;
 import salycanela.model.entities.TabVtsCaja;
+import salycanela.model.entities.TabVtsCocina;
 import salycanela.model.entities.TabVtsDetallePedido;
 import salycanela.model.entities.TabVtsPedido;
 import salycanela.model.entities.TabVtsPlato;
-import salycanela.model.entities.TabVtsTipoPlato;
+
 import salycanela.model.entities.TabVtsTransaccion;
 
 /**
@@ -116,8 +117,18 @@ public class ManagerPedido {
 				throw new Exception("Error debe especificar la mesa.");
 			pedidoTmp.setMesapedido(mesa);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new Exception("Error al asignar mesa: " + e.getMessage());
+		}
+	}
+
+	public void asignarCocinaPedidoTmp(TabVtsPedido pedidoTmp, int cocina) throws Exception {
+		try {
+			if (cocina == 0)
+				throw new Exception("Error debe especificar la cocina.");
+			TabVtsCocina c = em.find(TabVtsCocina.class, cocina);
+			pedidoTmp.setTabVtsCocina(c);
+		} catch (Exception e) {
+			throw new Exception("Error al asignar cocina: " + e.getMessage());
 		}
 	}
 
@@ -129,7 +140,9 @@ public class ManagerPedido {
 			throw new Exception("Debe ingresar los productos en el pedido.");
 		if (pedidoTmp.getMesapedido() == 0)
 			throw new Exception("Debe registrar la mesa.");
-
+		if (pedidoTmp.getTabVtsCocina() == null)
+			throw new Exception("Debe registrar la cocina.");
+		
 		pedidoTmp.setFechapedido(new Date());
 		transaccionTmp.setValortransaccion(pedidoTmp.getValorpedido());
 
@@ -244,7 +257,6 @@ public class ManagerPedido {
 		sentenciaSQL = "SELECT d FROM TabVtsDetallePedido d WHERE d.tabVtsPedido.idpedido=" + idpedido;
 		q = em.createQuery(sentenciaSQL);
 		listado = q.getResultList();
-
 		return listado;
 	}
 }

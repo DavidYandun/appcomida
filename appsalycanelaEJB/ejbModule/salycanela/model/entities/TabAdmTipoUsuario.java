@@ -16,7 +16,7 @@ public class TabAdmTipoUsuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TAB_ADM_TIPO_USUARIO_IDTIPOUSUARIO_GENERATOR", sequenceName="TAB_ADM_TIPO_USUARIO_SEQ", allocationSize=1)
+	@SequenceGenerator(name="TAB_ADM_TIPO_USUARIO_IDTIPOUSUARIO_GENERATOR", sequenceName="TAB_ADM_TIPO_USUARIO_SEQ",allocationSize=1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TAB_ADM_TIPO_USUARIO_IDTIPOUSUARIO_GENERATOR")
 	@Column(unique=true, nullable=false)
 	private Integer idtipousuario;

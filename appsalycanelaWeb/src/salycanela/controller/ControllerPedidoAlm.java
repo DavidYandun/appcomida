@@ -10,13 +10,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import salycanela.model.entities.TabVtsCocina;
 import salycanela.model.entities.TabVtsDetallePedido;
 
 //import salycanela.model.entities.TabVtsDetallePedido;
 import salycanela.model.entities.TabVtsPedido;
 import salycanela.model.entities.TabVtsPlato;
 import salycanela.model.entities.TabVtsTransaccion;
-
+import salycanela.model.manager.ManagerCocina;
 import salycanela.model.manager.ManagerPedido;
 import salycanela.model.manager.ManagerPlato;
 import salycanela.view.util.JSFUtil;
@@ -30,14 +31,19 @@ public class ControllerPedidoAlm {
 	private List<TabVtsDetallePedido> detalleTmp;
 	@EJB
 	private ManagerPlato managerPlato;
-
+	@EJB
+	private ManagerCocina managerCocina;
 	private List<TabVtsPedido> lista_x_entregar;
 	private List<TabVtsPedido> lista_entregado;
 	private List<TabVtsPlato> listamenu;
 
+	private TabVtsPlato sopa;
+	private int bebida;
+
 	private int cantidad;
 	private int idplato;
 	private int mesa = 0;
+	private int cocina;
 	private int idusuario;
 	private boolean entregapedido;
 
@@ -55,25 +61,28 @@ public class ControllerPedidoAlm {
 	private BigDecimal valorpedido;
 
 	@PostConstruct
-	public void iniciar() {
+	public void iniciar() throws Exception {
 		nuevoPedido();
 	}
 
 	public void actualizarTablas() {
 		lista_x_entregar = managerPedido.findAllPedidosXentregar();
 		lista_entregado = managerPedido.findAllPedidosEntregado();
-		listamenu=managerPlato.findAllMenu(1);
+		listamenu = managerPlato.findAllMenu(1);
 	}
 
-	public void nuevoPedido() {
+	public void nuevoPedido() throws Exception {
 		actualizarTablas();
 		transaccionTmp = managerPedido.crearTransaccionTmp();
 		pedidoTmp = managerPedido.crearPedidoTmp(transaccionTmp);
 		// detalles
 		cantidad = 1;
 		idplato = 0;
+		sopa = managerPlato.findPlatoById(12);
 		// pedido
 		mesa = 0;
+		cocina = 1;
+		bebida = 0;
 		entregapedido = false;
 		segundo = false;
 		llevar = false;
@@ -99,6 +108,22 @@ public class ControllerPedidoAlm {
 		return "";
 	}
 
+	public String insertarBebida() {
+		if (transaccionTmpGuardada == true && pedidoTmpGuardada == true) {
+			JSFUtil.crearMensajeWarning("El pedido ya fue guardado.");
+			return "";
+		}
+		try {
+			managerPedido.agregarDetallePedidoTmp(pedidoTmp, bebida, 1, segundo, llevar, tarjeta);
+			segundo = false;
+			llevar = false;
+			tarjeta = false;
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+		}
+		return "";
+	}
+
 	public void eliminarDetalle(int iddp) throws Exception {
 		try {
 			managerPedido.eliminarDetallePedidoTmp(pedidoTmp, iddp);
@@ -106,6 +131,7 @@ public class ControllerPedidoAlm {
 		} catch (Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());
 		}
+
 	}
 
 	public void asignarMesa() {
@@ -120,12 +146,25 @@ public class ControllerPedidoAlm {
 		}
 	}
 
+	public void asignarCocina() {
+		if (pedidoTmpGuardada == true) {
+			JSFUtil.crearMensajeWarning("El pedido ya fue guardado.");
+		}
+		try {
+			
+			managerPedido.asignarCocinaPedidoTmp(pedidoTmp, cocina);
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError("Por favor asigne una cocina");
+		}
+	}
+
 	public String guardarPedido() {
 		if (transaccionTmpGuardada == true && pedidoTmpGuardada == true) {
 			JSFUtil.crearMensajeWarning("El pedido ya fue guardada.");
 			return "";
 		}
 		try {
+			managerPedido.asignarCocinaPedidoTmp(pedidoTmp, cocina);
 			managerPedido.guardarPedidoTemporal(transaccionTmp, pedidoTmp);
 			transaccionTmpGuardada = true;
 			pedidoTmpGuardada = true;
@@ -175,20 +214,31 @@ public class ControllerPedidoAlm {
 	}
 
 	public String Segundos(TabVtsDetallePedido detalle) {
-		if (detalle.getSegundo()) 
+		if (detalle.getSegundo())
 			return "Segundo de";
-			return "";
-	}
-	public String Llevar(TabVtsDetallePedido detalle) {
-		if (detalle.getLlevar()) 
-			return "para Llevar";
-			return "";
+		return "";
 	}
 
-	public List<SelectItem> getListaPlatoSI() {
+	public String Llevar(TabVtsDetallePedido detalle) {
+		if (detalle.getLlevar())
+			return "para Llevar";
+		return "";
+	}
+
+	public List<SelectItem> getListaCocinaSI() {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
-		List<TabVtsPlato> listadoPlatos = managerPlato.findAllPlatos();
-		for (TabVtsPlato p : listadoPlatos) {
+		List<TabVtsCocina> listadoCocinas = managerCocina.findAllCocinas();
+		for (TabVtsCocina p : listadoCocinas) {
+			SelectItem item = new SelectItem(p.getIdcocina(), p.getNombrecocina());
+			listadoSI.add(item);
+		}
+		return listadoSI;
+	}
+
+	public List<SelectItem> getListaBebidaSI() {
+		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
+		List<TabVtsPlato> listadoBebidas = managerPlato.findAllMenu(3);
+		for (TabVtsPlato p : listadoBebidas) {
 			SelectItem item = new SelectItem(p.getIdplato(), p.getNombreplato());
 			listadoSI.add(item);
 		}
@@ -355,5 +405,28 @@ public class ControllerPedidoAlm {
 		this.listamenu = listamenu;
 	}
 
-	
+	public TabVtsPlato getSopa() {
+		return sopa;
+	}
+
+	public void setSopa(TabVtsPlato sopa) {
+		this.sopa = sopa;
+	}
+
+	public int getCocina() {
+		return cocina;
+	}
+
+	public void setCocina(int cocina) {
+		this.cocina = cocina;
+	}
+
+	public int getBebida() {
+		return bebida;
+	}
+
+	public void setBebida(int bebida) {
+		this.bebida = bebida;
+	}
+
 }

@@ -1,6 +1,5 @@
 package salycanela.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,14 +7,11 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.commons.codec.digest.DigestUtils;
 import salycanela.model.entities.TabAdmTipoUsuario;
 import salycanela.model.entities.TabAdmUsuario;
 import salycanela.model.manager.ManagerUsuario;
-import salycanela.model.util.ModelUtil;
 import salycanela.view.util.JSFUtil;
 
 @ManagedBean
@@ -38,8 +34,6 @@ public class ControllerUsuario {
 	private String correoUsuario1;
 	private String passwordUsuario1;
 	private boolean estadoUsuario1 = true;
-
-	private TabAdmUsuario u;
 	private boolean respuesta;
 	private List<TabAdmUsuario> lista;
 

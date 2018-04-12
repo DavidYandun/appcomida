@@ -21,7 +21,7 @@
 				<p:menuitem value="punto de venta" url="#" />
 				<p:menuitem value="pedido almuerzo" url="#" />
 			</p:breadCrumb>
-			<p:messages autoUpdate="true"></p:messages>
+			<p:messages autoUpdate="true" id="mensajes"></p:messages>
 
 			<p:panelGrid id="panel1">
 				<p:row>
@@ -47,14 +47,19 @@
 									</p:spinner>
 									<h:commandButton value="Guardar pedido"
 										action="#{controllerPedidoAlm.guardarPedido()}" />
-									<p:messages id="mensajes" />
+									<h:panelGrid columns="2">
+										<h:outputText value="Cocina:" />
+										<h:selectOneMenu value="#{controllerPedidoAlm.cocina}">
+											<f:selectItems value="#{controllerPedidoAlm.listaCocinaSI}" />
+										</h:selectOneMenu>
+									</h:panelGrid>
 								</p:panelGrid>
 							</p:panel>
 						</h:form>
 					</p:column>
 					<p:column rowspan="2" style="width:100%;">
 						<h:form id="formLista">
-							<h:panelGrid columns="3" style="margin-bottom:10px"
+							<h:panelGrid columns="8" style="margin-bottom:10px"
 								cellpadding="5">
 								<p:selectBooleanCheckbox itemLabel="Segundos"
 									value="#{controllerPedidoAlm.segundo}" />
@@ -63,6 +68,18 @@
 								<p:selectBooleanCheckbox itemLabel="
 								Tarjeta"
 									value="#{controllerPedidoAlm.tarjeta}" />
+								<h:commandButton
+									action="#{controllerPedidoAlm.insertarDetalle(controllerPedidoAlm.sopa)}"
+									value="Sopa del día" />
+								<h:outputText value="Bebidas: " />
+								<h:selectOneMenu value="#{controllerPedidoAlm.bebida}">
+									<f:selectItem itemLabel="Seleccione una bebida..."
+										itemValue="-1" />
+									<f:selectItems value="#{controllerPedidoAlm.listaBebidaSI}" />
+								</h:selectOneMenu>
+								<h:commandButton
+									actionListener="#{controllerPedidoAlm.insertarBebida()}"
+									value="Añadir" />
 							</h:panelGrid>
 							<p:dataGrid value="#{controllerPedidoAlm.listamenu}" var="p"
 								columns="3" rows="4" paginator="true"
@@ -74,10 +91,9 @@
 									actionListener="#{controllerPedidoAlm.insertarDetalle(p)}"
 									update=":formDetalles">
 									<p:panel header="#{p.nombreplato}" style="text-align:center">
-										<p:graphicImage value="/images/platos/#{p.idplato}.jpg"
-											height="100px" />
+										<p:graphicImage value="#{p.foto}" height="100px" />
 										<br />
-											<h:outputText value="#{p.stock}" id="stock" />
+										<h:outputText value="#{p.stock}" id="stock" />
 									</p:panel>
 									<p:effect type="pulsate" event="click" />
 								</p:commandLink>
@@ -129,77 +145,83 @@
 						</h:form>
 					</p:column>
 				</p:row>
-				<p:row>
-					<!-- Lista de pedidos que ya salieron o que estan por salir -->
-					<p:column>
-						<h:form id="form_sinentregar">
-							<p:dataScroller value="#{controllerPedidoAlm.lista_x_entregar}"
-								var="p" chunkSize="5">
-								<h:panelGrid columns="2" style="width:40%"
-									columnClasses="cabecera,detalle">
-									<p:outputPanel>
-										<h:panelGrid columns="2">
-											<h:panelGrid columns="2" cellpadding="5">
-												<h:outputText value="Pedido:" />
-												<h:outputText value="#{p.idpedido}"
-													style="font-weight: bold" />
-												<h:outputText value="Mesa:" />
-												<h:outputText value="#{p.mesapedido}"
-													style="font-weight: bold" />
-											</h:panelGrid>
-											<p:commandButton value="Entregar"
-												actionListener="#{controllerPedidoAlm.EntregarPedido(p,true)}" />
-										</h:panelGrid>
-										<p:dataTable value="#{controllerPedidoAlm.CargarPedido(p)}"
-											var="d">
-											<p:column headerText="Cant" style="width:50px">
-												<h:outputText value="#{d.cantidaddp}" />
-											</p:column>
-											<p:column headerText="Producto" style="width:150px">
-												<h:outputText
-													value="#{controllerPedidoAlm.Segundos(d)}  #{d.tabVtsPlato.nombreplato} #{controllerPedidoAlm.Llevar(d)}" />
-											</p:column>
-
-										</p:dataTable>
-									</p:outputPanel>
-								</h:panelGrid>
-								<p:separator />
-							</p:dataScroller>
-						</h:form>
-					</p:column>
-					<p:column>
-						<h:form id="form_entregado" position="north">
-							<p:panel header="LISTA DE PEDIDOS ENTREGADOS">
-								<p:dataTable value="#{controllerPedidoAlm.lista_entregado}"
-									var="p" id="tabla1">
-									<p:column headerText="Fecha">
-										<h:outputText value="#{p.fechapedido}" />
-									</p:column>
-									<p:column headerText="N° Pedido">
-										<h:outputText value="#{p.idpedido}" />
-									</p:column>
-									<p:column headerText="Mesa">
-										<h:outputText value="#{p.mesapedido}" />
-									</p:column>
-									<p:column headerText="Valor">
-										<h:outputText value="#{p.valorpedido}" />
-									</p:column>
-									<p:column headerText="Acción">
-										<p:splitButton value="Ver" onclick="PF('dialogo1').show();"
-											update="form4"
-											actionListener="#{controllerPedidoAlm.CargarPedido(p)}"
-											icon="ui-icon-disk">
-											<p:menuitem value="Retornar"
-												actionListener="#{controllerPedidoAlm.EntregarPedido(p,false)}"
-												icon="ui-icon-arrowrefresh-1-w" />
-										</p:splitButton>
-									</p:column>
-								</p:dataTable>
-							</p:panel>
-						</h:form>
-					</p:column>
-				</p:row>
 			</p:panelGrid>
+			<!-- Lista de pedidos que ya salieron o que estan por salir -->
+
+			<h:form id="form_sinentregar" style="align:center">
+				<p:repeat value="#{controllerPedidoAlm.lista_x_entregar}" var="p"
+					chunkSize="5">
+					<h:panelGrid columns="2" style="width:40%"
+						columnClasses="cabecera,detalle">
+						<p:outputPanel>
+							<h:panelGrid columns="2">
+								<h:panelGrid columns="2" cellpadding="5">
+									<h:outputText value="Pedido:" />
+									<h:outputText value="#{p.idpedido}" style="font-weight: bold" />
+									<h:outputText value="Mesa:" />
+									<h:outputText value="#{p.mesapedido}" style="font-weight: bold" />
+								</h:panelGrid>
+								<p:commandButton value="Entregar"
+									actionListener="#{controllerPedidoAlm.EntregarPedido(p,true)}" />
+							</h:panelGrid>
+							<p:dataTable value="#{controllerPedidoAlm.CargarPedido(p)}"
+								var="d">
+								<p:column headerText="Cant" style="width:50px">
+									<h:outputText value="#{d.cantidaddp}" />
+								</p:column>
+								<p:column headerText="Producto" style="width:150px">
+									<h:outputText
+										value="#{controllerPedidoAlm.Segundos(d)}  #{d.tabVtsPlato.nombreplato} #{controllerPedidoAlm.Llevar(d)}" />
+								</p:column>
+
+							</p:dataTable>
+						</p:outputPanel>
+					</h:panelGrid>
+					<p:separator />
+				</p:repeat>
+			</h:form>
+
+			<h:form id="form_entregado">
+				<p:panel header="LISTA DE PEDIDOS ENTREGADOS">
+					<p:dataTable value="#{controllerPedidoAlm.lista_entregado}" var="p"
+						id="tabla1">
+						<p:column headerText="Fecha">
+							<h:outputText value="#{p.fechapedido}" />
+						</p:column>
+						<p:column headerText="N° Pedido">
+							<h:outputText value="#{p.idpedido}" />
+						</p:column>
+						<p:column headerText="Mesa">
+							<h:outputText value="#{p.mesapedido}" />
+						</p:column>
+						<p:column headerText="Valor">
+							<h:outputText value="#{p.valorpedido}" />
+						</p:column>
+						<p:column headerText="Acción">
+							<p:splitButton value="Ver" onclick="PF('dialogo1').show();"
+								update="form4"
+								actionListener="#{controllerPedidoAlm.CargarPedido(p)}"
+								icon="ui-icon-disk">
+							</p:splitButton>
+							<p:splitButton value="Retornar"
+								actionListener="#{controllerPedidoAlm.EntregarPedido(p,false)}"
+								icon="ui-icon-arrowrefresh-1-w">
+							</p:splitButton>
+						</p:column>
+						<p:column headerText="Acción">
+							<h:commandLink value="Ver" onclick="PF('dialogo1').show();"
+								update="form4"
+								actionListener="#{controllerPedidoAlm.CargarPedido(p)}"
+								icon="ui-icon-disk" />
+							<h:commandButton value="Retornar"
+								actionListener="#{controllerPedidoAlm.EntregarPedido(p,false)}"
+								icon="ui-icon-arrowrefresh-1-w" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+
+
 
 			<p:dialog header="Pedido" widgetVar="dialogo1" id="dialogo1"
 				width="500" modal="true" hideEffect="fade">
