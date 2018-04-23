@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<body>
+	<ui:composition template="../template.xhtml">
+		<ui:define name="title">
+			<title>Menú diario</title>
+		</ui:define>
+		<ui:define name="content">
+			<p:growl autoUpdate="true"></p:growl>
+			<p:breadCrumb style="font-size:x-small">
+				<p:menuitem value="Administrador" url="../../template.xhtml" />
+				<p:menuitem value="Cajero" url="../../template.xhtml" />
+				<p:menuitem value="Control de platos" url="../../../template.xhtml" />
+				<p:menuitem value="Menú diario" url="#" />
+			</p:breadCrumb>
+			<h:panelGrid columns="2">
+				<h:form id="form_segundos" style="font-size:small">
+					<p:panel header="Menu de Segundos">
+						<p:dataTable value="#{controllerPlato.listaalmuerzos}" var="p"
+							id="tabla1"
+							emptyMessage="No existen platos con el filtro aplicado"
+							filteredValue="#{controllerPlato.filtroPlatos}">
+							<p:column headerText="Código">
+								<h:outputText value="#{p.idplato}" />
+							</p:column>
+							<p:column headerText="Nombre Plato" filterBy="#{p.nombreplato}"
+								filterMatchMode="contains">
+								<h:outputText value="#{p.nombreplato}" />
+							</p:column>
+							<p:column headerText="Categoría">
+								<h:outputText value="#{p.tabVtsTipoPlato.nombretipoplato}" />
+							</p:column>
+							<p:column headerText="Asignar">
+								<p:commandButton icon="ui-icon-circle-arrow-e"
+									update="form_stock" onclick="PF('dialogo_stock').show();"
+									actionListener="#{controllerPlato.CargarPlato(p)}"
+									value="Agregar"></p:commandButton>
+							</p:column>
+						</p:dataTable>
+						<f:facet name="actions">
+							<p:commandButton icon="ui-icon-pencil" value="Nuevo" action="#{controllerPlato.vaciarCampos()}"
+								update="form_segundos" onclick="PF('dialogo_nuevo').show();"
+								style="float:right;" />
+						</f:facet>
+					</p:panel>
+
+				</h:form>
+				<h:form id="form_menu" style="font-size:small">
+					<p:panel header="Menú del Día">
+						<p:dataTable value="#{controllerPlato.listamenu}" var="p"
+							id="tabla1">
+							<p:column headerText="Código">
+								<h:outputText value="#{p.idplato}" />
+							</p:column>
+							<p:column headerText="Nombre Plato">
+								<h:outputText value="#{p.nombreplato}" />
+							</p:column>
+							<p:column headerText="Precio">
+								<h:outputText value="#{p.precioplato}" />
+							</p:column>
+							<p:column headerText="Precio Especial">
+								<h:outputText value="#{p.precioespecialplato}" />
+							</p:column>
+							<p:column headerText="Stock">
+								<h:outputText value="#{p.stock}" />
+							</p:column>
+							<p:column headerText="Opciones">
+								<p:commandButton icon="ui-icon-pencil" update="form_editar"
+									onclick="PF('dialogo_editar').show();"
+									actionListener="#{controllerPlato.CargarPlato(p)}"></p:commandButton>
+								<p:commandButton icon="ui-icon-trash"
+									update="@form,:form_menu:tabla1 :form_segundos"
+									actionListener="#{controllerPlato.EliminarMenu(p)}"></p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</h:form>
+			</h:panelGrid>
+			<p:dialog header="Nuevo Almuerzo" widgetVar="dialogo_nuevo"
+				id="dialogo_nuevo" modal="true" hideEffect="fade">
+				<h:form id="form_nuevo" style="font-size:small">
+					<p:panelGrid columns="2">
+						<h:outputText value="Nombre del Plato " />
+						<p:inputText value="#{controllerPlato.nombreplato}"
+							required="true" requiredMessage="Especifique el nombre" />
+
+						<h:outputText value="Descripción " />
+						<p:inputTextarea value="#{controllerPlato.descripcionplato}"
+							required="true" requiredMessage="Especifique la descripción"
+							rows="3" cols="20" />
+						<h:outputText value="URL-foto: " />
+						<p:inputTextarea value="#{controllerPlato.foto}" required="true"
+							requiredMessage="Especifique la dirección de la imagen" />
+						<h:outputText value="Precio Normal " />
+						<p:inputNumber value="#{controllerPlato.precioplato}"
+							symbol=" USD" symbolPosition="s" decimalSeparator=","
+							thousandSeparator="." />
+						<h:outputText value="Precio Segundos " />
+						<p:inputNumber value="#{controllerPlato.precioespecialplato}"
+							symbol=" USD" symbolPosition="s" decimalSeparator=","
+							thousandSeparator="." />
+						<h:outputText value="Stock " />
+						<p:spinner value="#{controllerPlato.stock}" required="true"
+							requiredMessage="Especifique el stock" min="0" />
+
+					</p:panelGrid>
+					<p:commandButton value="Agregar"
+						update="@form,:form_segundos:tabla1"
+						actionListener="#{controllerPlato.AgregarAlmuerzo()}"
+						onclick="PF('modal').hide();$('#form_nuevo').trigger('reset');"></p:commandButton>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog header="Asignar stock del menú" widgetVar="dialogo_stock"
+				id="dialogo_stock" modal="true" hideEffect="fade">
+				<h:form id="form_stock">
+					<p:panelGrid columns="2">
+						<h:outputText value="Código:" />
+						<h:outputText value="#{controllerPlato.idplato}" />
+						<h:outputText value="Nombre Plato" />
+						<h:outputText value="#{controllerPlato.nombreplato}" />
+						<h:outputText value="Stock" />
+						<p:spinner value="#{controllerPlato.stock}" required="true"
+							requiredMessage="Especifique el stock" min="1" />
+					</p:panelGrid>
+					<p:commandButton value="Aceptar" update="@form,:form_menu:tabla1"
+						actionListener="#{controllerPlato.AgregarMenu()}"
+						onclick="PF('modal').hide();$('#form_menu').trigger('reset');"></p:commandButton>
+				</h:form>
+			</p:dialog>
+
+			<p:dialog header="Editar stock del menú" widgetVar="dialogo_editar"
+				id="dialogo_editar" modal="true" hideEffect="fade">
+				<h:form id="form_editar">
+					<p:panelGrid columns="2">
+						<h:outputText value="Código:" />
+						<h:outputText value="#{controllerPlato.idplato}" />
+						<h:outputText value="Nombre Plato" />
+						<h:outputText value="#{controllerPlato.nombreplato}" />
+						<h:outputText value="Stock" />
+						<p:spinner value="#{controllerPlato.stock}" required="true"
+							requiredMessage="Especifique el stock" min="1" />
+					</p:panelGrid>
+					<p:commandButton value="Aceptar" update="@form,:form_menu:tabla1"
+						actionListener="#{controllerPlato.EditarMenu()}"
+						onclick="PF('modal').hide();$('#form_menu').trigger('reset');"></p:commandButton>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

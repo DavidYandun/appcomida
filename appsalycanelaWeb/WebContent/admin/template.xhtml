@@ -3,7 +3,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui" xmlns:b="http://bootsfaces.net/ui">
 <f:metadata>
 	<f:event listener="#{controllerLogin.actionComprobarLogin()}"
 		type="preRenderView"></f:event>
@@ -22,16 +22,9 @@
 			<div align="center">
 				<p:graphicImage value="/images/logotipo.jpg" width="1100" />
 			</div>
-			<p:menubar>
-				<p:submenu label="Administrador" icon="ui-icon-document">
-					<p:submenu label="Control de Platos" icon="ui-icon-contact">
-						<p:menuitem value="Categorías de platos"
-							url="/faces/admin/administracion/controlplatos/tipoplato.xhtml" />
-						<p:menuitem value="Platos"
-							url="/faces/admin/administracion/controlplatos/plato.xhtml" />
-						<p:menuitem value="Menú diario"
-							url="/faces/admin/administracion/controlplatos/menudiario.xhtml" />
-					</p:submenu>
+			<p:menubar style="font-size:small">
+				<p:submenu label="Administración" icon="ui-icon-document">
+
 					<p:menuitem value="Control de usuarios"
 						url="/faces/admin/administracion/usuario.xhtml" />
 					<p:separator />
@@ -39,45 +32,40 @@
 						url="/faces/admin/administracion/parametro.xhtml" />
 					<p:menuitem value="Cajas"
 						url="/faces/admin/administracion/caja.xhtml" />
-						<p:menuitem value="Cocinas"
+					<p:menuitem value="Cocinas"
 						url="/faces/admin/administracion/cocina.xhtml" />
 				</p:submenu>
-
-				<p:submenu label="Punto de Venta">
-					<p:submenu label="Pedidos">
-						<p:menuitem value="Nuevo Pedido"
-							url="/faces/admin/puntodeventa/pedido.xhtml"
-							icon="ui-icon-arrowreturnthick-1-w" />
-							<p:menuitem value="Nuevo Almuerzos"
-							url="/faces/admin/puntodeventa/pedidoalmuerzo.xhtml"
-							icon="ui-icon-arrowreturnthick-1-w" />
+				<p:submenu label="Cajero">
+					<p:submenu label="Control de Platos" icon="ui-icon-contact">
+						<p:menuitem value="Menú diario"
+							url="/faces/admin/cajeros/controlplatos/menudiario.xhtml" />
+						<p:menuitem value="Platos"
+							url="/faces/admin/cajeros/controlplatos/plato.xhtml" />
+						<p:menuitem value="Categorías de platos"
+							url="/faces/admin/cajeros/controlplatos/tipoplato.xhtml" />
+					</p:submenu>
+					<p:submenu label="Punto de Venta">
+						<p:submenu label="Pedidos">
+							<p:menuitem value="Nuevo Almuerzo"
+								url="/faces/admin/cajeros/puntodeventa/pedidos/pedidoalmuerzo.xhtml"
+								icon="ui-icon-arrowreturnthick-1-w" />
+							<p:menuitem value="Nuevo Pedido"
+								url="/faces/admin/cajeros/puntodeventa/pedidos/pedido.xhtml"
+								icon="ui-icon-arrowreturnthick-1-w" />
 							<p:menuitem value="Nuevo Pollos"
-							url="/faces/admin/puntodeventa/pedidopollo.xhtml"
-							icon="ui-icon-arrowreturnthick-1-w" />
-					</p:submenu>
-					<p:menuitem value="Nueva Factura" url="#"
-						icon="ui-icon-arrowreturnthick-1-e" />
-					<p:menuitem value="Clientes"
-						url="/faces/admin/puntodeventa/cliente.xhtml"
-						icon="ui-icon-arrowreturnthick-1-e" />
-					<p:menuitem value="Lista de platos" url="#"
-						icon="ui-icon-arrowreturnthick-1-e" />
-				</p:submenu>
-
-				<p:submenu label="Help" icon="ui-icon-help">
-					<p:menuitem value="Contents" url="#" />
-					<p:submenu label="Search" icon="ui-icon-search">
-						<p:submenu label="Text">
-							<p:menuitem value="Workspace" url="#" />
+								url="/faces/admin/cajeros/puntodeventa/pedidos/pedidopollo.xhtml"
+								icon="ui-icon-arrowreturnthick-1-w" />
 						</p:submenu>
-						<p:menuitem value="File" url="#" />
+						<p:menuitem value="Nueva Factura" url="#"
+							icon="ui-icon-arrowreturnthick-1-e" />
 					</p:submenu>
+					<p:menuitem value="Clientes"
+						url="/faces/admin/cajeros/cliente.xhtml"
+						icon="ui-icon-arrowreturnthick-1-e" />
 				</p:submenu>
-
-				<p:menuitem value="Quit" url="#" actionListener="#"
-					icon="ui-icon-close" />
-
-
+				<p:menuitem value="Lista de pedidos"
+						url="/faces/admin/cocinas/listapedidos.xhtml"
+						icon="ui-icon-arrowreturnthick-1-e" />
 				<f:facet name="options">
 					<p:outputLabel style="margin-right:10px"
 						value="#{controllerLogin.u.nombreusuario}-#{controllerLogin.u.tabAdmTipoUsuario.nombretipousuario}" />

@@ -1,6 +1,7 @@
 package salycanela.model.manager;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ManagerPedido {
 	}
 
 	public TabVtsTransaccion crearTransaccionTmp() {
-		TabAdmUsuario usuario = em.find(TabAdmUsuario.class, "1003529672");
+		TabAdmUsuario usuario = em.find(TabAdmUsuario.class, "1003529672");// cambiar por id de usuario
 		TabVtsCaja caja = em.find(TabVtsCaja.class, "Restaurante");
 		TabVtsTransaccion transaccionTmp = new TabVtsTransaccion();
 		transaccionTmp.setTabAdmUsuario(usuario);
@@ -50,7 +51,7 @@ public class ManagerPedido {
 	}
 
 	public TabVtsPedido crearPedidoTmp(TabVtsTransaccion transaccionTmp) {
-		TabAdmUsuario usuario = em.find(TabAdmUsuario.class, "1003529672");
+		TabAdmUsuario usuario = em.find(TabAdmUsuario.class, "1003529672");// cambiar por id de usuario
 		TabVtsPedido pedidoTmp = new TabVtsPedido();
 		pedidoTmp.setTabAdmUsuario(usuario);
 		pedidoTmp.setTabVtsTransaccion(transaccionTmp);
@@ -142,7 +143,7 @@ public class ManagerPedido {
 			throw new Exception("Debe registrar la mesa.");
 		if (pedidoTmp.getTabVtsCocina() == null)
 			throw new Exception("Debe registrar la cocina.");
-		
+
 		pedidoTmp.setFechapedido(new Date());
 		transaccionTmp.setValortransaccion(pedidoTmp.getValorpedido());
 
@@ -170,22 +171,31 @@ public class ManagerPedido {
 		return p;
 	}
 
-	public List<TabVtsPedido> findAllPedidosXentregar() {
+	public List<TabVtsPedido> findAllPedidosXentregar(int idcocina) {
 		Query q;
 		List<TabVtsPedido> listado;
-		String sentenciaSQL;
-		sentenciaSQL = "SELECT p FROM TabVtsPedido p WHERE p.entregapedido=false AND p.anulapedido=false ORDER BY p.idpedido";
+		String sentenciaSQL = null;
+		if (idcocina != 0) {
+
+			sentenciaSQL = "SELECT p FROM TabVtsPedido p WHERE p.entregapedido=false AND p.anulapedido=false AND p.tabVtsCocina.idcocina="
+					+ idcocina + "ORDER BY p.idpedido";
+		} else if (idcocina == 0) {
+			sentenciaSQL = "SELECT p FROM TabVtsPedido p WHERE p.entregapedido=false AND p.anulapedido=false ORDER BY p.idpedido";
+		}
 		q = em.createQuery(sentenciaSQL);
 		listado = q.getResultList();
 		return listado;
 
 	}
 
-	public List<TabVtsPedido> findAllPedidosEntregado() {
+	public List<TabVtsPedido> findAllPedidosEntregado(String fecha) {
 		Query q;
 		List<TabVtsPedido> listado;
 		String sentenciaSQL;
-		sentenciaSQL = "SELECT p FROM TabVtsPedido p WHERE p.entregapedido=true ORDER BY p.idpedido";
+
+		//SimpleDateFormat date_format = new SimpleDateFormat("DD-MM-YYYY");
+		//String f = date_format.format(fecha);
+		sentenciaSQL = "SELECT p FROM TabVtsPedido p WHERE p.entregapedido=true AND  TO_CHAR(p.fechapedido,'DD-MM-YYYY')='"+fecha+"'";
 		q = em.createQuery(sentenciaSQL);
 		listado = q.getResultList();
 		return listado;

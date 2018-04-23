@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" xmlns:b="http://bootsfaces.net/ui">
+<f:metadata>
+	<f:event listener="#{controllerLogin.actionComprobarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html: charset=UTF-8" />
+	<h:outputStylesheet name="css/cssLayout.css" />
+	<ui:insert name="title">
+		<title>Administrador</title>
+	</ui:insert>
+</h:head>
+<h:body>
+	<div id="top">
+		<ui:insert name="top">
+			<div align="center">
+				<p:graphicImage value="/images/logotipo.jpg" width="1100" />
+			</div>
+			<p:menubar style="font-size:small">
+				<p:submenu label="Control de Platos" icon="ui-icon-contact">
+					<p:menuitem value="Menú diario"
+						url="/faces/cajero/controlplatos/menudiario.xhtml" />
+					<p:menuitem value="Platos"
+						url="/faces/cajero/controlplatos/plato.xhtml" />
+					<p:menuitem value="Categorías de platos"
+						url="/faces/cajero/controlplatos/tipoplato.xhtml" />
+				</p:submenu>
+				<p:submenu label="Punto de Venta">
+					<p:submenu label="Pedidos">
+						<p:menuitem value="Nuevo Almuerzo"
+							url="/faces/cajero/puntodeventa/pedidos/pedidoalmuerzo.xhtml"
+							icon="ui-icon-arrowreturnthick-1-w" />
+						<p:menuitem value="Nuevo Pedido"
+							url="/faces/cajero/puntodeventa/pedidos/pedido.xhtml"
+							icon="ui-icon-arrowreturnthick-1-w" />
+						<p:menuitem value="Nuevo Pollos"
+							url="/faces/cajero/puntodeventa/pedidos/pedidopollo.xhtml"
+							icon="ui-icon-arrowreturnthick-1-w" />
+					</p:submenu>
+					<p:menuitem value="Nueva Factura" url="#"
+						icon="ui-icon-arrowreturnthick-1-e" />
+
+				</p:submenu>
+				<p:menuitem value="Clientes" url="/faces/cajero/cliente.xhtml"
+					icon="ui-icon-arrowreturnthick-1-e" />
+				<f:facet name="options">
+					<p:outputLabel style="margin-right:10px"
+						value="#{controllerLogin.u.nombreusuario}-#{controllerLogin.u.tabAdmTipoUsuario.nombretipousuario}" />
+					<h:form>
+						<p:commandLink action="#{controllerLogin.actionSalir()}"
+							value="Cerrar sesión"></p:commandLink>
+					</h:form>
+				</f:facet>
+			</p:menubar>
+
+		</ui:insert>
+	</div>
+
+	<div id="content">
+		<ui:insert name="content">Página vacia
+		</ui:insert>
+	</div>
+	<div id="bottom">
+		<ui:insert name="bottom">Bottom</ui:insert>
+	</div>
+</h:body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<body>
+	<ui:composition template="../template.xhtml">
+		<ui:define name="title">
+			<title>Categoría platos</title>
+		</ui:define>
+		<ui:define name="content">
+			<p:growl autoUpdate="true"></p:growl>
+			<p:breadCrumb style="font-size:x-small">
+				<p:menuitem value="Administrador" url="../../template.xhtml" />
+				<p:menuitem value="Cajero" url="../../template.xhtml" />
+				<p:menuitem value="Control de platos" url="../../template.xhtml" />
+				<p:menuitem value="Categoría de platos" url="#" />
+			</p:breadCrumb>
+			<h:panelGrid columns="2">
+				<p:dialog header="Nueva Categoría de Plato" widgetVar="dialogo2" id="dialogo2"
+					modal="true"  hideEffect="fade">
+					<h:form id="form1" style="font-size:small">
+						<p:panelGrid columns="2">
+							<h:outputText value="Nombre Categoría:" />
+							<p:inputText value="#{controllerTipoplato.nombretipoplato}"
+								required="true" requiredMessage="Especifique el nombre" />
+							<h:outputText value="Descripción: " />
+							<p:inputTextarea value="#{controllerTipoplato.descripciontipoplato}"
+								required="true" requiredMessage="Especifique la descripción" />
+						</p:panelGrid>
+						<p:commandButton value="Agregar" update="@form,:form2:tabla1"
+							actionListener="#{controllerTipoplato.AgregarTipoplato()}"
+							onclick="PF('modal').hide();$('#form1').trigger('reset');"></p:commandButton>
+
+					</h:form>
+				</p:dialog>
+
+				<h:form id="form2" style="font-size:small">
+					<p:panel header="LISTA DE REGISTROS">
+						<p:dataTable value="#{controllerTipoplato.lista}" var="tp"
+							id="tabla1">
+							<p:column headerText="Código">
+								<h:outputText value="#{tp.idtipoplato}" />
+							</p:column>
+							<p:column headerText="Nombre Categoría">
+								<h:outputText value="#{tp.nombretipoplato}" />
+							</p:column>
+							<p:column headerText="Descripción">
+								<h:outputText value="#{tp.descripciontipoplato}" />
+							</p:column>
+							<p:column headerText="EDITAR">
+								<p:commandButton icon="ui-icon-pencil" update="form4"
+									onclick="PF('dialogo1').show();"
+									actionListener="#{controllerTipoplato.CargarTipoplato(tp)}"></p:commandButton>
+							</p:column>
+						</p:dataTable>
+						<f:facet name="actions">
+
+							<p:commandButton icon="ui-icon-pencil" value="Nuevo" action="#{controllerTipoplato.vaciarCampos()}"
+								update="form1" onclick="PF('dialogo2').show();"
+								style="float:right;" />
+						</f:facet>
+					</p:panel>
+				</h:form>
+			</h:panelGrid>
+
+			<p:dialog header="Edición de Categoría de Platos"
+				widgetVar="dialogo1" id="dialogo1" modal="true"
+				hideEffect="fade">
+				<h:form id="form4"  style="font-size:small">
+
+					<p:panelGrid columns="2">
+						<h:outputText value="Código:" />
+						<h:outputText value="#{controllerTipoplato.idtipoplato}" />
+						<h:outputText value="Nombre categoría:"
+							requiredMessage="Especifique el nombre" />
+						<p:inputText value="#{controllerTipoplato.nombretipoplato}"
+							required="true" />
+						<h:outputText value="Descripción:" />
+						<p:inputTextarea value="#{controllerTipoplato.descripciontipoplato}"
+							required="true" requiredMessage="Especifique la descripción" />
+					</p:panelGrid>
+					<p:commandButton value="Actualizar" update="@form,:form2:tabla1"
+						actionListener="#{controllerTipoplato.EditarTipoplato()}"
+						onclick="PF('modal').hide();$('#form4').trigger('reset');"></p:commandButton>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

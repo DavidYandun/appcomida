@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{controllerLogin.actionComprobarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+
+<body>
+	<ui:composition template="../../../template.xhtml">
+		<ui:define name="title">
+			<title>Pedido</title>
+		</ui:define>
+		<ui:define name="content">
+			<p:growl autoUpdate="true"></p:growl>
+			<p:breadCrumb style="font-size:x-small">
+				<p:menuitem value="Administrador" url="../../../template.xhtml" />
+				<p:menuitem value="Cajero" url="../../../template.xhtml" />
+				<p:menuitem value="Punto de venta" url="../../../template.xhtml" />
+				<p:menuitem value="Pedidos" url="../../../template.xhtml" />
+				<p:menuitem value="Pedido" url="#" />
+			</p:breadCrumb>
+			<p:messages autoUpdate="true"></p:messages>
+
+			<p:panelGrid id="panel1" columns="2">
+				<h:form id="form2">
+					<p:panel header="Datos del Pedido">
+						<p:commandButton action="#{controllerPedido.nuevoPedido()}"
+							value="Crear nuevo Pedido" update="form2 :form3" />
+
+						<p:panelGrid columns="2">
+							<h:outputText value="Nro. de Pedido:" style="font-weight: bold" />
+							<h:outputText value="#{controllerPedido.pedidoTmp.idpedido}" />
+							<h:outputText value="Fecha del pedido:" style="font-weight: bold" />
+							<h:outputText value="#{controllerPedido.pedidoTmp.fechapedido}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+							</h:outputText>
+							<h:outputText value="Seleccione la mesa:"
+								style="font-weight: bold" />
+							<p:spinner min="0" value="#{controllerPedido.mesa}">
+								<p:ajax update="mensajes"
+									listener="#{controllerPedido.asignarMesa()}"></p:ajax>
+							</p:spinner>
+							<h:commandButton value="Guardar pedido"
+								action="#{controllerPedido.guardarPedido()}" />
+							<p:messages id="mensajes" />
+							<h:commandButton value="Imprimir" type="button"
+								icon="ui-icon-print"
+								rendered="#{controllerPedido.pedidoTmpGuardada}">
+								<p:printer target=":form3:tablaFacturaDets" />
+							</h:commandButton>
+						</p:panelGrid>
+					</p:panel>
+				</h:form>
+				<h:form id="form3">
+					<p:panelGrid header="Detalle de productos" columns="2">
+
+						<p:panelGrid columns="2" border="1">
+							<h:outputText value="Plato:" />
+							<h:selectOneMenu value="#{controllerPedido.idplato}">
+								<f:selectItem itemLabel="Seleccione un plato..." itemValue="-1" />
+								<f:selectItems value="#{controllerPedido.listaPlatoSI}" />
+
+							</h:selectOneMenu>
+							<h:outputText value="Cantidad:" />
+							<p:spinner min="0" value="#{controllerPedido.cantidad}" />
+							<p:commandButton value="adicionar"
+								action="#{controllerPedido.insertarDetalle()}" update="form3"
+								icon="ui-icon-plusthick" />
+
+						</p:panelGrid>
+
+
+						<p:dataTable
+							value="#{controllerPedido.pedidoTmp.tabVtsDetallePedidos}"
+							var="d" id="tablaFacturaDets">
+							<f:facet name="header">
+								<h:outputText value="Detalle de platos:" />
+							</f:facet>
+
+							<p:column style="width:40px">
+								<f:facet name="header">
+					CANT
+				</f:facet>
+								<h:outputText value="#{d.cantidaddp}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+					PRODUCTO
+				</f:facet>
+								<h:outputText value="#{d.tabVtsPlato.nombreplato}" />
+							</p:column>
+
+							<p:column style="width:100px">
+								<f:facet name="header">
+					P.Unit
+				</f:facet>
+								<h:outputText value="#{d.valorunitariodp}" />
+
+								<f:facet name="footer">
+									<h:panelGrid columns="1"
+										style="font-weight: bold; text-align:right">
+										<h:outputText value="TOTAL:" />
+									</h:panelGrid>
+								</f:facet>
+							</p:column>
+
+							<p:column style="width:120px;text-align:right">
+								<f:facet name="header">
+					P.Total
+				</f:facet>
+								<h:outputText value="#{d.valortotaldp}" maxFractionDigits="2"
+									minFractionDigits="2" style="text-align:right" />
+								<f:facet name="footer">
+									<h:panelGrid columns="1"
+										style="font-weight: bold; text-align:right">
+
+										<h:outputText
+											value="#{controllerPedido.pedidoTmp.valorpedido}">
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
+												currencySymbol="$" />
+										</h:outputText>
+									</h:panelGrid>
+								</f:facet>
+							</p:column>
+						</p:dataTable>
+
+					</p:panelGrid>
+				</h:form>
+			</p:panelGrid>
+			<!-- Lista de pedidos que ya salieron o que estan por salir -->
+			<p:panelGrid columns="2">
+				<h:form id="form_sinentregar">
+					<p:panel header="LISTA DE PEDIDOS POR ENTREGAR">
+						<p:dataTable value="#{controllerPedido.lista_x_entregar}" var="p"
+							id="tabla1">
+							<p:column headerText="Fecha">
+								<h:outputText value="#{p.fechapedido}" />
+							</p:column>
+							<p:column headerText="N°Pedido">
+								<h:outputText value="#{p.idpedido}" />
+							</p:column>
+							<p:column headerText="Mesa">
+								<h:outputText value="#{p.mesapedido}" />
+							</p:column>
+							<p:column headerText="Valor">
+								<h:outputText value="#{p.valorpedido}" />
+							</p:column>
+							<p:column headerText="Acción">
+								<p:splitButton value="Ver" onclick="PF('dialogo1').show();"
+									update="form4"
+									actionListener="#{controllerPedido.CargarPedido(p)}"
+									icon="ui-icon-disk">
+									<p:menuitem value="Entregar"
+										actionListener="#{controllerPedido.EntregarPedido(p,true)}"
+										icon="ui-icon-arrowrefresh-1-w" />
+									<p:separator />
+									<p:menuitem value="Anular"
+										actionListener="#{controllerPedido.AnularPedido(p,true)}"
+										ajax="false" icon="ui-icon-close" />
+								</p:splitButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</h:form>
+				<h:form id="form_entregado">
+					<p:panel header="LISTA DE PEDIDOS ENTREGADOS">
+						<p:dataTable value="#{controllerPedido.lista_entregado}" var="p"
+							id="tabla1">
+
+							<p:column headerText="Fecha">
+								<h:outputText value="#{p.fechapedido}" />
+							</p:column>
+							<p:column headerText="N° Pedido">
+								<h:outputText value="#{p.idpedido}" />
+							</p:column>
+							<p:column headerText="Mesa">
+								<h:outputText value="#{p.mesapedido}" />
+							</p:column>
+							<p:column headerText="Valor">
+								<h:outputText value="#{p.valorpedido}" />
+							</p:column>
+							<p:column headerText="Acción">
+								<p:splitButton value="Ver" onclick="PF('dialogo1').show();"
+									update="form4"
+									actionListener="#{controllerPedido.CargarPedido(p)}"
+									icon="ui-icon-disk">
+									<p:menuitem value="Retornar"
+										actionListener="#{controllerPedido.EntregarPedido(p,false)}"
+										icon="ui-icon-arrowrefresh-1-w" />
+								</p:splitButton>
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+				</h:form>
+			</p:panelGrid>
+			<p:dialog header="Pedido" widgetVar="dialogo1" id="dialogo1"
+				width="500" modal="true" hideEffect="fade">
+				<h:form id="form4">
+					<p:panelGrid columns="2">
+						<h:outputText value="Pedido:" />
+						<h:outputText value="#{controllerPedido.pedidoTmp1.idpedido}" />
+						<h:outputText value="Mesa: " />
+						<h:outputText value="#{controllerPedido.pedidoTmp1.mesapedido}" />
+					</p:panelGrid>
+					<p:dataTable value="#{controllerPedido.detalleTmp}" var="d">
+						<p:column headerText="Producto" style="width:150px">
+							<h:outputText value="#{d.tabVtsPlato.nombreplato}" />
+						</p:column>
+						<p:column headerText="Cantidad" style="width:50px">
+							<h:outputText value="#{d.cantidaddp}" />
+						</p:column>
+						<p:column headerText="Precio" style="width:50px">
+							<h:outputText value="#{d.valortotaldp}" />
+						</p:column>
+					</p:dataTable>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

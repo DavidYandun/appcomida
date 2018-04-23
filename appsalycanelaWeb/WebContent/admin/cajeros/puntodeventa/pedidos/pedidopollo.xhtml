@@ -10,16 +10,18 @@
 </f:metadata>
 
 <body>
-	<ui:composition template="../template.xhtml">
+	<ui:composition template="../../../template.xhtml">
 		<ui:define name="title">
-			<title>Pedido</title>
+			<title>Pollo</title>
 		</ui:define>
 		<ui:define name="content">
 			<p:growl autoUpdate="true"></p:growl>
-			<p:breadCrumb>
-				<p:menuitem value="punto de venta" url="#" />
-				<p:menuitem value="punto de venta" url="#" />
-				<p:menuitem value="pedido" url="#" />
+			<p:breadCrumb style="font-size:x-small">
+				<p:menuitem value="Administrador" url="../../../template.xhtml" />
+				<p:menuitem value="Cajero" url="../../../template.xhtml" />
+				<p:menuitem value="Punto de venta" url="../../../template.xhtml" />
+				<p:menuitem value="Pedidos" url="../../../template.xhtml" />
+				<p:menuitem value="Pollo" url="#" />
 			</p:breadCrumb>
 			<p:messages autoUpdate="true"></p:messages>
 
@@ -196,8 +198,8 @@
 					</p:panel>
 				</h:form>
 			</p:panelGrid>
-			<p:dialog header="Pedido" widgetVar="dialogo1" id="dialogo1" width="500"
-				modal="true" hideEffect="fade">
+			<p:dialog header="Pedido" widgetVar="dialogo1" id="dialogo1"
+				width="500" modal="true" hideEffect="fade">
 				<h:form id="form4">
 					<p:panelGrid columns="2">
 						<h:outputText value="Pedido:" />
@@ -205,18 +207,17 @@
 						<h:outputText value="Mesa: " />
 						<h:outputText value="#{controllerPedido.pedidoTmp1.mesapedido}" />
 					</p:panelGrid>
-				<p:dataTable value="#{controllerPedido.detalleTmp}"
-					var="d">
-					<p:column headerText="Producto" style="width:150px">
-						<h:outputText value="#{d.tabVtsPlato.nombreplato}" />
-					</p:column>
-					<p:column headerText="Cantidad" style="width:50px">
-						<h:outputText value="#{d.cantidaddp}" />
-					</p:column>
-					<p:column headerText="Precio" style="width:50px">
-						<h:outputText value="#{d.valortotaldp}" />
-					</p:column>
-				</p:dataTable>
+					<p:dataTable value="#{controllerPedido.detalleTmp}" var="d">
+						<p:column headerText="Producto" style="width:150px">
+							<h:outputText value="#{d.tabVtsPlato.nombreplato}" />
+						</p:column>
+						<p:column headerText="Cantidad" style="width:50px">
+							<h:outputText value="#{d.cantidaddp}" />
+						</p:column>
+						<p:column headerText="Precio" style="width:50px">
+							<h:outputText value="#{d.valortotaldp}" />
+						</p:column>
+					</p:dataTable>
 				</h:form>
 			</p:dialog>
 		</ui:define>

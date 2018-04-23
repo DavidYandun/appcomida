@@ -11,41 +11,41 @@
 </h:head>
 <body>
 	<div>
-		<p:messages autoUpdate="true"></p:messages>
+
 		<h:panelGrid style="margin: 0 auto;">
 			<p:graphicImage value="images/logotipo1.jpg" />
-			<br />
-			<br />
-			<br />
 		</h:panelGrid>
 		<h:form prependId="false" style="padding-top:3%">
-			<b:growl />
+
 			<b:column col-lg="4" col-md="2" col-xs="0"></b:column>
 			<b:column col-lg="4" col-xs="12" col-md="8">
-				<b:panel title="Ingrese sus datos" collapsible="false">
+				<b:panel title="Ingrese sus datos" look="primary"
+					collapsible="false">
 					<b:row>
 						<b:inputText placeholder="Ingrese su Cedula" id="username"
 							value="#{controllerLogin.cedulaUsuario}" ajax="true"
-							required="true" required-message="Ingrese su cedula"
+							required="true" required-message="Ingrese su cédula"
 							autocomplete="false" type="number">
 							<f:facet name="prepend">
 								<b:icon name="user" />
 							</f:facet>
 						</b:inputText>
+						<b:message for="username" />
 						<b:inputSecret placeholder="Ingrese su Contraseña" id="password"
 							value="#{controllerLogin.passwordUsuario}" ajax="true"
 							autocomplete="false" required="true"
 							required-message="Ingrese la Contraseña">
 							<f:facet name="prepend">
-								<b:iconAwesome name="key" />
+								<b:iconAwesome name="lock" />
 							</f:facet>
 						</b:inputSecret>
+						<b:message for="password" />
 					</b:row>
 					<b:row>
-						<b:column span="4">
+						<b:column span="12">
 							<b:commandButton value="Ingresar"
 								actionListener="#{controllerLogin.actionLogin()}"
-								style="width:100%" />
+								style="width:100%" look="primary" />
 						</b:column>
 					</b:row>
 				</b:panel>

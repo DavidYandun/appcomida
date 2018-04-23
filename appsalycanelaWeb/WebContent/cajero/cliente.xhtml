@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<body>
+	<ui:composition template="template.xhtml">
+		<ui:define name="title">
+			<title>Clientes</title>
+		</ui:define>
+		<ui:define name="content">
+			<p:growl autoUpdate="true"></p:growl>
+			<p:breadCrumb style="font-size:x-small">
+				<p:menuitem value="Administrador" url="../../template.xhtml" />
+				<p:menuitem value="Cajero" url="../../template.xhtml" />
+				<p:menuitem value="Punto de venta" url="../../template.xhtml" />
+				<p:menuitem value="Clientes" url="#" />
+			</p:breadCrumb>
+			<h:panelGrid columns="2">
+				<p:dialog header="Nuevo Cliente" widgetVar="dialogo_nuevo"
+					id="dialogo_nuevocliente" modal="true" hideEffect="fade">
+					<h:form id="form_nuevo" style="font-size:small">
+						<p:panelGrid columns="2">
+							<h:outputText value="Cédula:*" />
+							<p:inputText value="#{controllerCliente.idcliente}"
+								required="true" requiredMessage="Especifique la cédula" />
+							<h:outputText value="Nombre:* " />
+							<p:inputText value="#{controllerCliente.nombrecliente}"
+								required="true" requiredMessage="Especifique el nombre" />
+							<h:outputText value="Apellido: *" />
+							<p:inputText value="#{controllerCliente.apellidocliente}"
+								required="true" requiredMessage="Especifique el apellido" />
+							<h:outputText value="Dirección:* " />
+							<p:inputText value="#{controllerCliente.direccioncliente}"
+								required="true" requiredMessage="Especifique la dirección" />
+							<h:outputText value="Teléfono: " />
+							<p:inputMask value="#{controllerCliente.telefonocliente}"
+								required="false" requiredMessage="Especifique el telefono"
+								mask="(999)-999-9999" />
+							<h:outputText value="Correo Electrónico: " />
+							<p:inputText value="#{controllerCliente.correocliente}"
+								required="false" requiredMessage="Especifique el correo">
+								<p:keyFilter regEx="/[a-z0-9_\.\-@]/i" />
+							</p:inputText>
+						</p:panelGrid>
+
+						<p:commandButton value="Agregar"
+							update="@form,:form_registros:tabla1"
+							actionListener="#{controllerCliente.AgregarCliente()}"
+							onclick="PF('modal').hide();$('#form_nuevo').trigger('reset');"></p:commandButton>
+					</h:form>
+				</p:dialog>
+				<h:form id="form_registros" style="font-size:small">
+					<p:panel header="LISTA DE REGISTROS">
+						<p:dataTable value="#{controllerCliente.lista}" var="c"
+							id="tabla1">
+							<p:column headerText="Cédula">
+								<h:outputText value="#{c.idcliente}" />
+							</p:column>
+							<p:column headerText="Apellido">
+								<h:outputText value="#{c.apellidocliente}" />
+							</p:column>
+							<p:column headerText="Nombre">
+								<h:outputText value="#{c.nombrecliente}" />
+							</p:column>
+							<p:column headerText="Dirección">
+								<h:outputText value="#{c.direccioncliente}" />
+							</p:column>
+							<p:column headerText="Teléfono" style="text-align:right">
+								<h:outputText value="#{c.telefonocliente}" />
+							</p:column>
+							<p:column headerText="e-mail">
+								<h:outputText value="#{c.correocliente}" />
+							</p:column>
+							<p:column headerText="Estado">
+								<h:outputText value="#{c.estadocliente}" />
+							</p:column>
+							<p:column headerText="EDITAR">
+								<p:commandButton icon="ui-icon-pencil" update="form_editar"
+									onclick="PF('dialogo_editar').show();"
+									actionListener="#{controllerCliente.CargarCliente(c)}"></p:commandButton>
+							</p:column>
+						</p:dataTable>
+						<f:facet name="actions">
+							<p:commandButton icon="ui-icon-pencil" value="Nuevo"
+								update="form_nuevo" onclick="PF('dialogo_nuevo').show();"
+								style="float:right;" />
+						</f:facet>
+					</p:panel>
+				</h:form>
+			</h:panelGrid>
+			<p:dialog header="Edición de Cliente" widgetVar="dialogo_editar"
+				id="dialogo_editar" modal="true" hideEffect="fade">
+				<h:form id="form_editar" style="font-size:small">
+
+					<p:panelGrid columns="2">
+						<h:outputText value="Cédula:" />
+						<h:outputText value="#{controllerCliente.idcliente}" />
+						<h:outputText value="Nombre:*"
+							requiredMessage="Especifique el nombre" />
+						<p:inputText value="#{controllerCliente.nombrecliente}"
+							required="true" />
+						<h:outputText value="Apellido:*" />
+						<p:inputText value="#{controllerCliente.apellidocliente}"
+							required="true" requiredMessage="Especifique el apellido" />
+						<h:outputText value="Dirección: *" />
+						<p:inputText value="#{controllerCliente.direccioncliente}"
+							required="true" requiredMessage="Especifique la dirección" />
+						<h:outputText value="Teléfono: " />
+						<p:inputMask value="#{controllerCliente.telefonocliente}"
+							required="false" requiredMessage="Especifique el teléfono"
+							mask="(999)-999-9999" />
+						<h:outputText value="Correo Electrónico: " />
+						<p:inputText value="#{controllerCliente.correocliente}"
+							required="false" requiredMessage="Especifique el correo" />
+						<h:outputText value="Estado: " />
+						<p:inputSwitch value="#{controllerCliente.estadocliente}" />
+					</p:panelGrid>
+					<p:commandButton value="Actualizar"
+						update="@form,:form_registros:tabla1"
+						actionListener="#{controllerCliente.EditarCliente()}"
+						onclick="PF('modal').hide();$('#form_editar').trigger('reset');"></p:commandButton>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

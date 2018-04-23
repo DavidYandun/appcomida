@@ -3,7 +3,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui" xmlns:b="http://bootsfaces.net/ui">
 
 <h:head></h:head>
 <body>
@@ -13,15 +13,15 @@
 		</ui:define>
 		<ui:define name="content">
 			<p:growl autoUpdate="true"></p:growl>
-			<p:breadCrumb>
-				<p:menuitem value="Administrador" url="#" />
-				<p:menuitem value="Administrador" url="#" />
+			<p:breadCrumb style="font-size:x-small">
+				<p:menuitem value="Administrador" url="../template.xhtml" />
+				<p:menuitem value="Administrador" url="../template.xhtml" />
 				<p:menuitem value="Cajas" url="#" />
 			</p:breadCrumb>
 			<h:panelGrid columns="2">
 				<p:dialog header="Nueva Caja" widgetVar="dialogo2" id="dialogo2"
-					modal="true" height="300" hideEffect="fade">
-					<h:form id="form1">
+					modal="true" hideEffect="fade">
+					<h:form id="form1" style="font-size:small">
 						<p:panelGrid columns="2">
 							<h:outputText value="Nombre Caja:" />
 							<p:inputText value="#{controllerCaja.idcaja}" required="true"
@@ -33,11 +33,10 @@
 						<p:commandButton value="Agregar" update="@form,:form2:tabla1"
 							actionListener="#{controllerCaja.AgregarCaja()}"
 							onclick="PF('modal').hide();$('#form1').trigger('reset');"></p:commandButton>
-
 					</h:form>
 				</p:dialog>
 
-				<h:form id="form2">
+				<h:form id="form2" style="font-size:small">
 					<p:panel header="LISTA DE REGISTROS">
 						<p:dataTable value="#{controllerCaja.lista}" var="p" id="tabla1">
 							<p:column headerText="Nombre de la Caja">
@@ -63,15 +62,13 @@
 			</h:panelGrid>
 
 			<p:dialog header="Edición de la Caja" widgetVar="dialogo1"
-				id="dialogo1" modal="true" height="330" hideEffect="fade">
-				<h:form id="form4">
-
+				id="dialogo1" modal="true" hideEffect="fade">
+				<h:form id="form4" style="font-size:small">
 					<p:panelGrid columns="2">
 						<h:outputText value="Nombre de la Caja:" />
 						<h:outputText value="#{controllerCaja.idcaja}" />
 						<h:outputText value="Valor actual:"
 							requiredMessage="El valor actual de la caja" />
-
 						<p:inputNumber value="#{controllerCaja.actualcaja}" symbol=" USD"
 							symbolPosition="s" decimalSeparator="," thousandSeparator="." />
 					</p:panelGrid>

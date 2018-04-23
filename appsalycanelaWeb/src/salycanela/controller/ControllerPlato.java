@@ -57,6 +57,18 @@ public class ControllerPlato {
 		}
 
 	}
+	public void AgregarAlmuerzo() {
+		try {
+			managerPlato.agregarPlato(1, nombreplato, descripcionplato, precioplato, precioespecialplato,
+					estadoplato, stock, menu, foto);
+			vaciarCampos();
+			JSFUtil.crearMensajeInfo("Almuerzo registrado.");
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
 
 	public void CargarPlato(TabVtsPlato plato) {
 		idplato = plato.getIdplato();
@@ -129,9 +141,7 @@ public class ControllerPlato {
 	}
 
 	public void vaciarCampos() {
-		lista = managerPlato.findAllPlatos();
-		listaalmuerzos = managerPlato.findAllPlatosTipo(1);
-		listamenu = managerPlato.findAllMenu(1);
+		actualizarTablas();
 		idplato = 0;
 		idtipoplato = 0;
 		nombreplato = null;
@@ -142,6 +152,12 @@ public class ControllerPlato {
 		stock = 1;
 		menu = false;
 		foto = null;
+	}
+
+	public void actualizarTablas() {
+		lista = managerPlato.findAllPlatos();
+		listaalmuerzos = managerPlato.findAllPlatosTipo(1);
+		listamenu = managerPlato.findAllMenu(1);
 	}
 
 	public int getIdplato() {

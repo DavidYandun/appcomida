@@ -13,47 +13,47 @@
 		</ui:define>
 		<ui:define name="content">
 			<p:growl autoUpdate="true"></p:growl>
-			<p:breadCrumb>
-				<p:menuitem value="punto de venta" url="#" />
-				<p:menuitem value="punto de venta" url="#" />
-				<p:menuitem value="clientes" url="#" />
+			<p:breadCrumb style="font-size:x-small">
+				<p:menuitem value="Administrador" url="../../template.xhtml" />
+				<p:menuitem value="Cajero" url="../../template.xhtml" />
+				<p:menuitem value="Punto de venta" url="../../template.xhtml" />
+				<p:menuitem value="Clientes" url="#" />
 			</p:breadCrumb>
 			<h:panelGrid columns="2">
-			<p:dialog header="Nuevo Cliente" widgetVar="dialogo2"
-				id="dialogo2" modal="true" height="300" hideEffect="fade">
-				<h:form id="form1">
+				<p:dialog header="Nuevo Cliente" widgetVar="dialogo_nuevo"
+					id="dialogo_nuevocliente" modal="true" hideEffect="fade">
+					<h:form id="form_nuevo" style="font-size:small">
 						<p:panelGrid columns="2">
-							<h:outputText value="Cédula:" />
+							<h:outputText value="Cédula:*" />
 							<p:inputText value="#{controllerCliente.idcliente}"
 								required="true" requiredMessage="Especifique la cédula" />
-							<h:outputText value="Nombre: " />
+							<h:outputText value="Nombre:* " />
 							<p:inputText value="#{controllerCliente.nombrecliente}"
 								required="true" requiredMessage="Especifique el nombre" />
-							<h:outputText value="Apellido: " />
+							<h:outputText value="Apellido: *" />
 							<p:inputText value="#{controllerCliente.apellidocliente}"
 								required="true" requiredMessage="Especifique el apellido" />
-							<h:outputText value="Dirección: " />
+							<h:outputText value="Dirección:* " />
 							<p:inputText value="#{controllerCliente.direccioncliente}"
-								required="true" requiredMessage="Especifique el nombre" />
+								required="true" requiredMessage="Especifique la dirección" />
 							<h:outputText value="Teléfono: " />
 							<p:inputMask value="#{controllerCliente.telefonocliente}"
-								required="true" requiredMessage="Especifique el nombre"
+								required="false" requiredMessage="Especifique el telefono"
 								mask="(999)-999-9999" />
 							<h:outputText value="Correo Electrónico: " />
 							<p:inputText value="#{controllerCliente.correocliente}"
-								required="true" requiredMessage="Especifique el nombre">
+								required="false" requiredMessage="Especifique el correo">
 								<p:keyFilter regEx="/[a-z0-9_\.\-@]/i" />
 							</p:inputText>
 						</p:panelGrid>
-												
-						<p:commandButton value="Agregar" update="@form,:form2:tabla1"
-						actionListener="#{controllerCliente.AgregarCliente()}"
-						onclick="PF('modal').hide();$('#form1').trigger('reset');"></p:commandButton>
 
-				</h:form>
+						<p:commandButton value="Agregar"
+							update="@form,:form_registros:tabla1"
+							actionListener="#{controllerCliente.AgregarCliente()}"
+							onclick="PF('modal').hide();$('#form_nuevo').trigger('reset');"></p:commandButton>
+					</h:form>
 				</p:dialog>
-
-				<h:form id="form2">
+				<h:form id="form_registros" style="font-size:small">
 					<p:panel header="LISTA DE REGISTROS">
 						<p:dataTable value="#{controllerCliente.lista}" var="c"
 							id="tabla1">
@@ -79,58 +79,53 @@
 								<h:outputText value="#{c.estadocliente}" />
 							</p:column>
 							<p:column headerText="EDITAR">
-								<p:commandButton icon="ui-icon-pencil" update="form4"
-									onclick="PF('dialogo1').show();"
+								<p:commandButton icon="ui-icon-pencil" update="form_editar"
+									onclick="PF('dialogo_editar').show();"
 									actionListener="#{controllerCliente.CargarCliente(c)}"></p:commandButton>
 							</p:column>
 						</p:dataTable>
 						<f:facet name="actions">
-								
-								<p:commandButton icon="ui-icon-pencil" value="Nuevo" update="form1"
-									onclick="PF('dialogo2').show();" style="float:right;"/>
+							<p:commandButton icon="ui-icon-pencil" value="Nuevo"
+								update="form_nuevo" onclick="PF('dialogo_nuevo').show();"
+								style="float:right;" />
 						</f:facet>
 					</p:panel>
 				</h:form>
 			</h:panelGrid>
-
-			<p:dialog header="Edición de Cliente" widgetVar="dialogo1"
-				id="dialogo1" modal="true" height="330" hideEffect="fade">
-				<h:form id="form4">
+			<p:dialog header="Edición de Cliente" widgetVar="dialogo_editar"
+				id="dialogo_editar" modal="true" hideEffect="fade">
+				<h:form id="form_editar" style="font-size:small">
 
 					<p:panelGrid columns="2">
 						<h:outputText value="Cédula:" />
 						<h:outputText value="#{controllerCliente.idcliente}" />
-						<h:outputText value="Nombre:" requiredMessage="Especifique el nombre" />
+						<h:outputText value="Nombre:*"
+							requiredMessage="Especifique el nombre" />
 						<p:inputText value="#{controllerCliente.nombrecliente}"
 							required="true" />
-						<h:outputText value="Apellido:" />
+						<h:outputText value="Apellido:*" />
 						<p:inputText value="#{controllerCliente.apellidocliente}"
-							required="true" requiredMessage="Especifique el apellido"/>
-						<h:outputText value="Dirección: " />
+							required="true" requiredMessage="Especifique el apellido" />
+						<h:outputText value="Dirección: *" />
 						<p:inputText value="#{controllerCliente.direccioncliente}"
 							required="true" requiredMessage="Especifique la dirección" />
 						<h:outputText value="Teléfono: " />
 						<p:inputMask value="#{controllerCliente.telefonocliente}"
-								required="true" requiredMessage="Especifique el teléfono"
-								mask="(999)-999-9999" />
+							required="false" requiredMessage="Especifique el teléfono"
+							mask="(999)-999-9999" />
 						<h:outputText value="Correo Electrónico: " />
 						<p:inputText value="#{controllerCliente.correocliente}"
-							required="true" requiredMessage="Especifique el correo" />
+							required="false" requiredMessage="Especifique el correo" />
 						<h:outputText value="Estado: " />
 						<p:inputSwitch value="#{controllerCliente.estadocliente}" />
 					</p:panelGrid>
-					<p:commandButton value="Actualizar" update="@form,:form2:tabla1"
+					<p:commandButton value="Actualizar"
+						update="@form,:form_registros:tabla1"
 						actionListener="#{controllerCliente.EditarCliente()}"
-						onclick="PF('modal').hide();$('#form4').trigger('reset');"></p:commandButton>
+						onclick="PF('modal').hide();$('#form_editar').trigger('reset');"></p:commandButton>
 				</h:form>
 			</p:dialog>
-
-
-
 		</ui:define>
 	</ui:composition>
-	
-	
-
 </body>
 </html>

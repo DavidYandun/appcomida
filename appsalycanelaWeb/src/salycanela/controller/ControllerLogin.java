@@ -40,7 +40,11 @@ public class ControllerLogin {
 				JSFUtil.crearMensajeInfo("Login correcto");
 				contex.getExternalContext().redirect("admin/template.xhtml");
 			} else if (u.getTabAdmTipoUsuario().getIdtipousuario() == 2) {
-				contex.getExternalContext().redirect("Operador/ListaReservas.xhtml");
+				JSFUtil.crearMensajeInfo("Login correcto");
+				contex.getExternalContext().redirect("cajero/puntodeventa/pedidos/pedidoalmuerzo.xhtml");
+			} else if (u.getTabAdmTipoUsuario().getIdtipousuario() == 3) {
+				JSFUtil.crearMensajeInfo("Login correcto");
+				contex.getExternalContext().redirect("cocina/listapedidos.xhtml");
 			}
 
 		} catch (Exception e) {
@@ -78,12 +82,11 @@ public class ControllerLogin {
 						return;
 				}
 				if (u.getTabAdmTipoUsuario().getIdtipousuario() == 2) {
-					if (!path.contains("/Operador/"))
+					if (!path.contains("/cajero/"))
 						ec.redirect(ec.getRequestContextPath() + "/faces/login.xhtml");
 					else
 						return;
 				}
-
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
