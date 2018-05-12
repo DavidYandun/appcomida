@@ -1,0 +1,323 @@
+package salycanela.controller;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+
+import org.apache.commons.codec.digest.DigestUtils;
+
+import salycanela.model.entities.TabAdmTipoUsuario;
+import salycanela.model.entities.TabAdmUsuario;
+import salycanela.model.entities.TabVtsTipoPlato;
+import salycanela.model.manager.ManagerUsuario;
+import salycanela.model.util.ModelUtil;
+import salycanela.view.util.JSFUtil;
+
+@ManagedBean
+@SessionScoped
+
+public class ControllerUsuario {
+
+	private String idUsuario;
+	private int idTipoUsuario;
+	private String nombreUsuario;
+	private String apellidoUsuario;
+	private String correoUsuario;
+	private String passwordUsuario;
+	private boolean estadoUsuario = true;
+
+	private String idUsuario1;
+	private int idTipoUsuario1;
+	private String nombreUsuario1;
+	private String apellidoUsuario1;
+	private String correoUsuario1;
+	private String passwordUsuario1;
+	private boolean estadoUsuario1 = true;
+
+	private TabAdmUsuario u;
+	private boolean respuesta;
+	private List<TabAdmUsuario> lista;
+	private boolean confirmadologin;
+
+	@EJB
+	private ManagerUsuario managerUsuarios;
+
+	public String actionLogin() {
+		try {
+			FacesContext contex = FacesContext.getCurrentInstance();
+			String encript = DigestUtils.sha1Hex(passwordUsuario);
+			respuesta = managerUsuarios.validarLogin(nombreUsuario, correoUsuario, encript);
+			u = managerUsuarios.findUsuario(nombreUsuario, correoUsuario);
+			JSFUtil.crearMensajeInfo("Login correcto");
+			// verificamos si el acceso es con admin:
+			if (u.getTabAdmTipoUsuario().getNombretipousuario().equals("admin"))
+				contex.getExternalContext().redirect("/faces/admin/template.xhtml");
+			if (u.getTabAdmTipoUsuario().getNombretipousuario().equals("cajero"))
+				contex.getExternalContext().redirect("/faces/cajero/template.xhtml");
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	public String actionSalir() {
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		return "/login?faces-redirect=true";
+	}
+
+	public void actionComprobarLogin() {
+
+		try {
+			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+			String path = ec.getRequestPathInfo();
+			System.out.println("getRequestContextPath(): " + ec.getRequestContextPath());
+			System.out.println("getRequestPathInfo(): " + path);
+			System.out.println("Id usuario: " + u.getIdusuario());
+			if (path.equals("/login.xhtml"))
+				return;
+
+			if (ModelUtil.isEmpty(u.getIdusuario() + ""))
+				ec.redirect(ec.getRequestContextPath() + "/faces/login.xhtml");
+			if (!respuesta) {
+				ec.redirect(ec.getRequestContextPath() + "/faces/login.xhtml");
+			} else {
+				// si hizo login, verificamos que acceda a paginas permitidas:
+				if (u.getTabAdmTipoUsuario().getNombretipousuario().equals("admin")) {
+					if (!path.contains("/admin/"))
+						ec.redirect(ec.getRequestContextPath() + "/faces/login.xhtml");
+					else
+						return;
+				}
+				// caso contrario es un blogger:
+				if (u.getTabAdmTipoUsuario().getNombretipousuario().equals("cajero")) {
+					if (!path.contains("/cajero/"))
+						ec.redirect(ec.getRequestContextPath() + "/faces/login.xhtml");
+					else
+						return;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@PostConstruct
+	public void iniciar() {
+		lista = managerUsuarios.findAllUsuarios();
+		idUsuario1 = null;
+		idTipoUsuario1 = 0;
+		nombreUsuario1 = null;
+		apellidoUsuario1 = null;
+		correoUsuario1 = null;
+		passwordUsuario1 = null;
+		estadoUsuario1 = true;
+
+	}
+
+	public void AgregarUsuario() {
+		try {
+			managerUsuarios.agregarusuario(idUsuario1, idTipoUsuario1, nombreUsuario1, apellidoUsuario1, correoUsuario1,
+					passwordUsuario1, estadoUsuario1);
+			lista = managerUsuarios.findAllUsuarios();
+			JSFUtil.crearMensajeInfo("Usuario registrado correctamente.");
+			idUsuario1 = null;
+			idTipoUsuario1 = 0;
+			nombreUsuario1 = null;
+			apellidoUsuario1 = null;
+			correoUsuario1 = null;
+			passwordUsuario1 = null;
+			estadoUsuario1 = true;
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	public void CargarUsuario(TabAdmUsuario usuario) {
+		idUsuario1 = usuario.getIdusuario();
+		idTipoUsuario1 = usuario.getTabAdmTipoUsuario().getIdtipousuario();
+		nombreUsuario1 = usuario.getNombreusuario();
+		apellidoUsuario1 = usuario.getApellidousuario();
+		correoUsuario1 = usuario.getCorreousuario();
+		passwordUsuario1 = usuario.getPasswordusuario();
+		estadoUsuario1 = usuario.getEstadousuario();
+	}
+
+	public void EditarUsuario() {
+		try {
+			managerUsuarios.editarUsuario(idUsuario1, idTipoUsuario1, nombreUsuario1,apellidoUsuario1, correoUsuario1, passwordUsuario1, estadoUsuario1);
+			lista = managerUsuarios.findAllUsuarios();
+			idUsuario1 = null;
+			idTipoUsuario1 = 0;
+			nombreUsuario1 = null;
+			apellidoUsuario1 = null;
+			correoUsuario1 = null;
+			passwordUsuario1 = null;
+			estadoUsuario1 = true;
+			JSFUtil.crearMensajeInfo("Usuario" + idUsuario1 + " editado correctamente.");
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+	public List<SelectItem> getListaUsuariosSI() {
+		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
+		List<TabAdmTipoUsuario> listadoUsuarios = managerUsuarios.findAllTipoUsuarios();
+
+		for (TabAdmTipoUsuario c : listadoUsuarios) {
+			SelectItem item = new SelectItem(c.getIdtipousuario(), c.getNombretipousuario());
+			listadoSI.add(item);
+		}
+		return listadoSI;
+	}
+	
+	
+	public String getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(String idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
+	public int getIdTipoUsuario() {
+		return idTipoUsuario;
+	}
+
+	public void setIdTipoUsuario(int idTipoUsuario) {
+		this.idTipoUsuario = idTipoUsuario;
+	}
+
+	public String getNombreUsuario() {
+		return nombreUsuario;
+	}
+
+	public void setNombreUsuario(String nombreUsuario) {
+		this.nombreUsuario = nombreUsuario;
+	}
+
+	public String getApellidoUsuario() {
+		return apellidoUsuario;
+	}
+
+	public void setApellidoUsuario(String apellidoUsuario) {
+		this.apellidoUsuario = apellidoUsuario;
+	}
+
+	public String getCorreoUsuario() {
+		return correoUsuario;
+	}
+
+	public void setCorreoUsuario(String correoUsuario) {
+		this.correoUsuario = correoUsuario;
+	}
+
+	public String getPasswordUsuario() {
+		return passwordUsuario;
+	}
+
+	public void setPasswordUsuario(String passwordUsuario) {
+		this.passwordUsuario = passwordUsuario;
+	}
+
+	public boolean isEstadoUsuario() {
+		return estadoUsuario;
+	}
+
+	public void setEstadoUsuario(boolean estadoUsuario) {
+		this.estadoUsuario = estadoUsuario;
+	}
+
+	public String getIdUsuario1() {
+		return idUsuario1;
+	}
+
+	public void setIdUsuario1(String idUsuario1) {
+		this.idUsuario1 = idUsuario1;
+	}
+
+	public int getIdTipoUsuario1() {
+		return idTipoUsuario1;
+	}
+
+	public void setIdTipoUsuario1(int idTipoUsuario1) {
+		this.idTipoUsuario1 = idTipoUsuario1;
+	}
+
+	public String getNombreUsuario1() {
+		return nombreUsuario1;
+	}
+
+	public void setNombreUsuario1(String nombreUsuario1) {
+		this.nombreUsuario1 = nombreUsuario1;
+	}
+
+	public String getApellidoUsuario1() {
+		return apellidoUsuario1;
+	}
+
+	public void setApellidoUsuario1(String apellidoUsuario1) {
+		this.apellidoUsuario1 = apellidoUsuario1;
+	}
+
+	public String getCorreoUsuario1() {
+		return correoUsuario1;
+	}
+
+	public void setCorreoUsuario1(String correoUsuario1) {
+		this.correoUsuario1 = correoUsuario1;
+	}
+
+	public String getPasswordUsuario1() {
+		return passwordUsuario1;
+	}
+
+	public void setPasswordUsuario1(String passwordUsuario1) {
+		this.passwordUsuario1 = passwordUsuario1;
+	}
+
+	public boolean isEstadoUsuario1() {
+		return estadoUsuario1;
+	}
+
+	public void setEstadoUsuario1(boolean estadoUsuario1) {
+		this.estadoUsuario1 = estadoUsuario1;
+	}
+
+	public boolean isRespuesta() {
+		return respuesta;
+	}
+
+	public void setRespuesta(boolean respuesta) {
+		this.respuesta = respuesta;
+	}
+
+	public List<TabAdmUsuario> getLista() {
+		return lista;
+	}
+
+	public void setLista(List<TabAdmUsuario> lista) {
+		this.lista = lista;
+	}
+
+	public boolean isConfirmadologin() {
+		return confirmadologin;
+	}
+
+	public void setConfirmadologin(boolean confirmadologin) {
+		this.confirmadologin = confirmadologin;
+	}
+
+	
+}

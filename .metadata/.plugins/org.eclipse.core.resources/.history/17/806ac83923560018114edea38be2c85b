@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pm="http://primefaces.org/mobile"  
+	xmlns:b="http://bootsfaces.net/ui">
+<f:metadata>
+	<f:event listener="#{controllerLogin.actionComprobarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+
+<body>
+	<ui:composition template="template.xhtml">
+		<ui:define name="title">
+			<title>Lista de pedidos</title>
+		</ui:define>
+		<ui:define name="content">
+
+			<p:breadCrumb style="font-size:x-small">
+				<p:menuitem value="Administrador" url="../../template.xhtml" />
+				<p:menuitem value="Cocina" url="../../template.xhtml" />
+				<p:menuitem value="Lista de pedidos" url="#" />
+			</p:breadCrumb>
+			
+				<!-- Lista de pedidos que ya salieron o que estan por salir -->
+				<b:column col-lg="4" col-md="2" col-xs="0"></b:column>
+			<b:column col-lg="8" col-xs="12" col-md="10">
+				<p:accordionPanel multiple="true">
+					<p:tab title="Platos por entregar">
+						<h:panelGrid style="text-align: center">
+							<h:form>
+								<p:panelGrid columns="3" style="font-size:small">
+									<p:outputLabel
+										value="Seleccione la cocina que quiere mostrar: " />
+									<b:selectOneMenu value="#{controllerPedidoAlm.lugar}"
+										onclick="#{controllerPedidoAlm.actualizarTablas()}">
+										<f:selectItem itemLabel="Mostrar todas" itemValue="0" />
+										<f:selectItems value="#{controllerPedidoAlm.listaCocinaSI}" />
+									</b:selectOneMenu>
+									<b:commandButton
+										action="#{controllerPedidoAlm.actualizarTablas()}"
+										value="Listar" look="primary" />
+								</p:panelGrid>
+							</h:form>
+							<p:separator />
+							<h:form id="form_sinentregar" style="align:center">
+								<p:repeat value="#{controllerPedidoAlm.lista_x_entregar}"
+									var="p">
+									<h:panelGrid columns="2" style="width:70%"
+										columnClasses="cabecera,detalle">
+										<p:panelGrid>
+											<p:row>
+												<p:column colspan="2">
+													<p:outputLabel value="#{p.tabVtsCocina.nombrecocina}"
+														style="font-size:small" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column>
+													<h:outputText value="Pedido:" />
+												</p:column>
+												<p:column>
+													<h:outputText value="#{p.idpedido}"
+														style="font-weight: bold" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column>
+													<h:outputText value="Mesa:" />
+												</p:column>
+												<p:column>
+													<h:outputText value="#{p.mesapedido}"
+														style="font-size:100px;" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column colspan="2">
+													<b:commandButton value="Entregar"
+														actionListener="#{controllerPedidoAlm.EntregarPedido(p,true)}"
+														look="success" />
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+										<p:dataTable value="#{controllerPedidoAlm.CargarPedido(p)}"
+											var="d">
+											<p:column headerText="Cant" style="width:30px">
+												<h:outputText value="#{d.cantidaddp}" />
+											</p:column>
+											<p:column headerText="Producto" style="width:150px">
+												<h:outputText
+													value="#{controllerPedidoAlm.Segundos(d)}  #{d.tabVtsPlato.nombreplato} #{controllerPedidoAlm.Llevar(d)}" />
+											</p:column>
+											<p:column headerText="V.Total" footerText=""
+												style="width:50px;text-align:right">
+												<h:outputText value="#{d.valortotaldp}"
+													style="text-align:right">
+													<f:convertNumber maxFractionDigits="2"
+														minFractionDigits="2" currencySymbol="$" />
+												</h:outputText>
+												<f:facet name="footer">
+													<h:outputText style="text-align:right"
+														value="#{p.valorpedido}">
+														<f:convertNumber maxFractionDigits="2"
+															minFractionDigits="2" />
+													</h:outputText>
+												</f:facet>
+											</p:column>
+										</p:dataTable>
+									</h:panelGrid>
+									<p:confirmDialog global="true" showEffect="fade"
+										hideEffect="fade">
+										<p:commandButton value="Yes" type="button"
+											styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+										<p:commandButton value="No" type="button"
+											styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+									</p:confirmDialog>
+									<p:separator />
+								</p:repeat>
+								<p:poll interval="6"
+									listener="#{controllerPedidoAlm.actualizarTablas()}"
+									update="form_sinentregar" />
+							</h:form>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="Lista de pedidos entregados">
+						<h:form id="form_entregado">
+							<p:dataTable value="#{controllerPedidoAlm.lista_entregado}"
+								var="p" id="tabla1">
+								<p:column headerText="Fecha">
+									<h:outputText value="#{p.fechapedido}" />
+								</p:column>
+								<p:column headerText="N° Pedido">
+									<h:outputText value="#{p.idpedido}" />
+								</p:column>
+								<p:column headerText="Mesa">
+									<h:outputText value="#{p.mesapedido}"/>
+								</p:column>
+								<p:column headerText="Valor">
+									<h:outputText value="#{p.valorpedido}" />
+								</p:column>
+								<p:column headerText="Acción">
+									<p:splitButton value="Ver" onclick="PF('dialogo1').show();"
+										update="form4"
+										actionListener="#{controllerPedidoAlm.CargarPedido(p)}"
+										icon="ui-icon-disk">
+									</p:splitButton>
+									<b:commandButton value="Retornar"
+										actionListener="#{controllerPedidoAlm.EntregarPedido(p,false)}"
+										icon="ui-icon-arrowrefresh-1-w">
+									</b:commandButton>
+								</p:column>
+
+							</p:dataTable>
+							<p:poll interval="6"
+								listener="#{controllerPedidoAlm.actualizarTablas()}"
+								update="form_entregado" />
+						</h:form>
+					</p:tab>
+				</p:accordionPanel>
+			</b:column>
+			<p:dialog header="Pedido" widgetVar="dialogo1" id="dialogo1"
+				width="500" modal="true" hideEffect="fade">
+				<h:form id="form4">
+					<p:panelGrid columns="2">
+						<h:outputText value="Pedido:" />
+						<h:outputText value="#{controllerPedidoAlm.pedidoTmp1.idpedido}" />
+						<h:outputText value="Mesa: " />
+						<h:outputText value="#{controllerPedidoAlm.pedidoTmp1.mesapedido}" />
+					</p:panelGrid>
+					<p:dataTable value="#{controllerPedidoAlm.detalleTmp}" var="d">
+						<p:column headerText="Producto" style="width:150px">
+							<h:outputText value="#{d.tabVtsPlato.nombreplato}" />
+						</p:column>
+						<p:column headerText="Cantidad" style="width:50px">
+							<h:outputText value="#{d.cantidaddp}" />
+						</p:column>
+						<p:column headerText="Precio" style="width:50px">
+							<h:outputText value="#{d.valortotaldp}" />
+						</p:column>
+						<p:column headerText="V.Total" footerText=""
+							style="width:50px;text-align:right">
+							<h:outputText value="#{d.valortotaldp}" style="text-align:right">
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
+									currencySymbol="$" />
+							</h:outputText>
+							<f:facet name="footer">
+								<h:outputText style="text-align:right"
+									value="#{controllerPedidoAlm.pedidoTmp1.valorpedido}">
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+								</h:outputText>
+							</f:facet>
+						</p:column>
+					</p:dataTable>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

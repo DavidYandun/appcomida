@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="salycanela.model.manager.ManagerCliente"/>
+<fullyQualifiedTypeName name="salycanela.model.manager.ManagerParametro"/>
+<fullyQualifiedTypeName name="salycanela.model.entities.TabVtsCliente"/>
+<fullyQualifiedTypeName name="com.sun.org.apache.xerces.internal.impl.dv.xs.DecimalDV"/>
+<fullyQualifiedTypeName name="salycanela.model.manager.ManagerCaja"/>
+<fullyQualifiedTypeName name="salycanela.model.entities.TabVtsTipoPlato"/>
+<fullyQualifiedTypeName name="salycanela.model.manager.ManagerTipoplato"/>
+<fullyQualifiedTypeName name="salycanela.model.entities.TabAdmUsuario"/>
+<fullyQualifiedTypeName name="salycanela.model.entities.TabVtsCaja"/>
+<fullyQualifiedTypeName name="javax.faces.bean.SessionScoped"/>
+<fullyQualifiedTypeName name="javax.faces.bean.ManagedBean"/>
+<fullyQualifiedTypeName name="javax.ejb.EJB"/>
+<fullyQualifiedTypeName name="salycanela.model.manager.ManagerPedido"/>
+<fullyQualifiedTypeName name="salycanela.model.manager.ManagerPlato"/>
+<fullyQualifiedTypeName name="salycanela.model.entities.TabVtsTransaccion"/>
+<fullyQualifiedTypeName name="javax.annotation.PostConstruct"/>
+<fullyQualifiedTypeName name="javax.faces.model.SelectItem"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="javax.persistence.Query"/>
+<fullyQualifiedTypeName name="salycanela.model.manager.ManagerMenu"/>
+<fullyQualifiedTypeName name="salycanela.model.entities.TabVtsPedido"/>
+<fullyQualifiedTypeName name="salycanela.model.entities.TabVtsMenu"/>
+<fullyQualifiedTypeName name="salycanela.model.entities.TabParametro"/>
+<fullyQualifiedTypeName name="salycanela.view.util.JSFUtil"/>
+<fullyQualifiedTypeName name="salycanela.model.entities.TabVtsDetallePedido"/>
+<fullyQualifiedTypeName name="salycanela.model.entities.TabVtsPlato"/>
+<fullyQualifiedTypeName name="salycanela.controller.ControllerPlato"/>
+<fullyQualifiedTypeName name="salycanela.model.entities.TabVtsCocina"/>
+<fullyQualifiedTypeName name="salycanela.model.manager.ManagerCocina"/>
+<fullyQualifiedTypeName name="java.math.BigDecimal"/>
+<fullyQualifiedTypeName name="javax.persistence.CascadeType"/>
+<fullyQualifiedTypeName name="javax.ejb.EJBs"/>
+<fullyQualifiedTypeName name="java.util.Date"/>
+<fullyQualifiedTypeName name="org.primefaces.event.SelectEvent"/>
+<fullyQualifiedTypeName name="javax.faces.context.FacesContext"/>
+<fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
+<fullyQualifiedTypeName name="javax.faces.application.FacesMessage"/>
+</qualifiedTypeNameHistroy>

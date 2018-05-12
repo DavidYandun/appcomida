@@ -1,0 +1,52 @@
+package salycanela.model.manager;
+
+import java.util.List;
+
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+import salycanela.model.entities.TabVtsMenu;
+import salycanela.model.entities.TabVtsPlato;
+import salycanela.model.entities.TabVtsTipoPlato;
+
+/**
+ * Session Bean implementation class ManagerMenu
+ */
+@Stateless
+@LocalBean
+public class ManagerMenu {
+	
+	@PersistenceContext(unitName = "restaurante_salycanelaDS")
+	private EntityManager em;
+
+	public ManagerMenu() {
+		// TODO Auto-generated constructor stub
+	}
+	public List<TabVtsPlato> findAllAlmuerzos() {
+		TabVtsTipoPlato tipo=em.find(TabVtsTipoPlato.class, 1);
+		Query q;
+		List<TabVtsPlato> listado;
+		List<TabVtsPlato> almuerzos;
+		String sentenciaSQL;
+		sentenciaSQL = "SELECT p FROM TabVtsPlato WHERE p.TabVtsTipoPlato="+tipo;
+		q = em.createQuery(sentenciaSQL);
+		listado = q.getResultList();
+		
+		return listado;
+	}
+
+	public List<TabVtsMenu> findAllMenu(){
+		Query q;
+		List<TabVtsMenu> listado;
+		String sentenciaSQL;
+		sentenciaSQL = "SELECT m FROM TabVtsMenu m ORDER BY m.nombremenu";
+		q = em.createQuery(sentenciaSQL);
+		listado = q.getResultList();
+		return listado;
+	}
+	
+	
+}

@@ -87,6 +87,12 @@ public class ControllerLogin {
 					else
 						return;
 				}
+				if (u.getTabAdmTipoUsuario().getIdtipousuario() == 3) {
+					if (!path.contains("/cocina/"))
+						ec.redirect(ec.getRequestContextPath() + "/faces/login.xhtml");
+					else
+						return;
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

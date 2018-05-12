@@ -1,0 +1,51 @@
+package salycanela.controller;
+
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+
+import salycanela.model.entities.TabVtsMenu;
+import salycanela.model.entities.TabVtsPlato;
+import salycanela.model.manager.ManagerMenu;
+import salycanela.model.manager.ManagerPlato;
+import salycanela.model.manager.ManagerTipoplato;
+
+@ManagedBean
+@SessionScoped
+
+
+
+public class ControllerMenu {
+	private List<TabVtsPlato> listaplatos;
+	private List<TabVtsMenu> listamenu;
+	
+	@EJB
+	private ManagerMenu managerMenu;
+	
+	@PostConstruct
+	public void iniciar() {
+		listaplatos=managerMenu.findAllAlmuerzos();
+		listamenu=managerMenu.findAllMenu();
+	}
+
+	public List<TabVtsPlato> getListaplatos() {
+		return listaplatos;
+	}
+
+	public void setListaplatos(List<TabVtsPlato> listaplatos) {
+		this.listaplatos = listaplatos;
+	}
+
+	public List<TabVtsMenu> getListamenu() {
+		return listamenu;
+	}
+
+	public void setListamenu(List<TabVtsMenu> listamenu) {
+		this.listamenu = listamenu;
+	}
+	
+	
+}
